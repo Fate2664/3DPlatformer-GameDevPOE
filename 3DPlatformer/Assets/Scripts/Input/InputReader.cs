@@ -13,7 +13,7 @@ namespace Platformer
 
         private PlayerInputActions inputActions;
         
-        public Vector3 Direction => inputActions.Player.Move.ReadValue<Vector2>();
+        public Vector2 Direction => inputActions.Player.Move.ReadValue<Vector2>();
 
         private void OnEnable()
         {
@@ -24,14 +24,42 @@ namespace Platformer
             }
             inputActions.Enable();
         }
+        
+        private void OnDisable()
+        {
+            if (inputActions != null)
+            {
+                inputActions.Disable();
+            }
+        }
 
         public void OnMove(InputAction.CallbackContext context)
         {
             Move.Invoke(context.ReadValue<Vector2>());
         }
 
+        public void OnAttack(InputAction.CallbackContext context)
+        {
+            throw new NotImplementedException();
+        }
+
         public void OnInteract(InputAction.CallbackContext context)
         {
+        }
+
+        public void OnCrouch(InputAction.CallbackContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnJump(InputAction.CallbackContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnSprint(InputAction.CallbackContext context)
+        {
+            throw new NotImplementedException();
         }
 
         public void OnLook(InputAction.CallbackContext context)
@@ -43,8 +71,25 @@ namespace Platformer
         {
         }
 
+        public void OnClick(InputAction.CallbackContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnRightClick(InputAction.CallbackContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnNavigate(InputAction.CallbackContext context)
+        {
+            throw new NotImplementedException();
+        }
+
         public void OnApply(InputAction.CallbackContext context)
         {
         }
+
     }
 }
+
