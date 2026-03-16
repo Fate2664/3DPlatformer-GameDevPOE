@@ -6,9 +6,7 @@ namespace Platformer
 {
     public class PlayerController : MonoBehaviour
     {
-        [Header("References")] [SerializeField]
-        private CharacterController controller;
-
+        [Header("References")] 
         [SerializeField] private Animator animator;
         [SerializeField] private CinemachineCamera freeLookCam;
         [SerializeField] private InputReader input;
@@ -23,7 +21,8 @@ namespace Platformer
         private Transform mainCam;
         private float currentSpeed;
         private float velocity;
-
+        private Vector3 movement;
+        private Rigidbody rb;
 
         private void Awake()
         {
@@ -32,12 +31,19 @@ namespace Platformer
             freeLookCam.LookAt = transform;
             freeLookCam.OnTargetObjectWarped(transform,
                 transform.position - freeLookCam.transform.position - Vector3.forward);
+            rb =  GetComponent<Rigidbody>(); 
+            rb.freezeRotation = true;
         }
 
         private void Update()
         {
-            HandleMovement();
+            movement = new Vector3(input.Direction.x, 0, input.Direction.y).normalized;
             UpdateAnimator();
+        }
+
+        private void FixedUpdate()
+        {
+            HandleMovement();
         }
 
         private void UpdateAnimator()
@@ -47,26 +53,26 @@ namespace Platformer
 
         private void HandleMovement()
         {
-            var moveDirection = new Vector3(input.Direction.x, 0, input.Direction.y).normalized;
             //Rotate movement direction to match camera rotation
-            var adjustedDirection = Quaternion.AngleAxis(mainCam.eulerAngles.y, Vector3.up) * moveDirection;
+            var adjustedDirection = Quaternion.AngleAxis(mainCam.eulerAngles.y, Vector3.up) * movement;
             if (adjustedDirection.magnitude > 0f)
             {
                 HandleRotation(adjustedDirection);
-                HandleCharacterController(adjustedDirection);
+                HandleHorizontalMovement(adjustedDirection);
                 SmoothSpeed(adjustedDirection.magnitude);
             }
             else
             {
                 SmoothSpeed(0f);
+                rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
             }
         }
 
-        void HandleCharacterController(Vector3 adjustedDirection)
+        void HandleHorizontalMovement(Vector3 adjustedDirection)
         {
             //Move player
-            var adjustedMovement = adjustedDirection * (moveSpeed * Time.deltaTime);
-            controller.Move(adjustedMovement);
+            Vector3 velocity = adjustedDirection * moveSpeed * Time.fixedDeltaTime;
+            rb.linearVelocity = new Vector3(velocity.x, velocity.y, velocity.z);
         }
 
         private void HandleRotation(Vector3 adjustedDirection)
