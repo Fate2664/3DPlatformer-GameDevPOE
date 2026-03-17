@@ -12,7 +12,7 @@ namespace Platformer
 
         private void Update()
         {
-            //IsGrounded = Physics
+            IsGrounded = Physics.SphereCast(transform.position, groundDistance, Vector3.down, out _, groundDistance,groundLayers);
         }
     }
 }

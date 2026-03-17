@@ -7,19 +7,23 @@ namespace Platformer
     public class PlayerController : MonoBehaviour
     {
         [Header("References")] 
-        [SerializeField] private Animator animator;
         [SerializeField] private CinemachineCamera freeLookCam;
         [SerializeField] private InputReader input;
 
         [Header("Settings")] [SerializeField] private float moveSpeed = 6.0f;
         [SerializeField] private float rotationSpeed = 15f;
         [SerializeField] private float smoothTime = 0.2f;
+        [SerializeField] private float animationSmooth = 8f;
         
         //Animator parameters 
-        static readonly int Speed = Animator.StringToHash("Speed");
+        static readonly int MoveX = Animator.StringToHash("MoveX");
+        static readonly int MoveZ = Animator.StringToHash("MoveZ");
 
         private Transform mainCam;
+        private Animator animator;
+        private Vector2 animMove;
         private float currentSpeed;
+        private Vector3 adjustedDirection;
         private float velocity;
         private Vector3 movement;
         private Rigidbody rb;
@@ -27,6 +31,7 @@ namespace Platformer
         private void Awake()
         {
             mainCam = Camera.main.transform;
+            animator = GetComponentInChildren<Animator>();
             freeLookCam.Follow = transform;
             freeLookCam.LookAt = transform;
             freeLookCam.OnTargetObjectWarped(transform,
@@ -48,13 +53,16 @@ namespace Platformer
 
         private void UpdateAnimator()
         {
-            animator.SetFloat(Speed, currentSpeed);
+            var target = new Vector2(movement.x, movement.z);
+            animMove = Vector2.Lerp(animMove, target, animationSmooth * Time.deltaTime);
+            animator.SetFloat(MoveX, adjustedDirection.x);
+            animator.SetFloat(MoveZ, adjustedDirection.z);
         }
 
         private void HandleMovement()
         {
             //Rotate movement direction to match camera rotation
-            var adjustedDirection = Quaternion.AngleAxis(mainCam.eulerAngles.y, Vector3.up) * movement;
+            adjustedDirection = Quaternion.AngleAxis(mainCam.eulerAngles.y, Vector3.up) * movement;
             if (adjustedDirection.magnitude > 0f)
             {
                 HandleRotation(adjustedDirection);
