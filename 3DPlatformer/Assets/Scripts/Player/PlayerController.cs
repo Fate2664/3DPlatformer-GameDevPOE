@@ -7,62 +7,74 @@ namespace Platformer
     public class PlayerController : MonoBehaviour
     {
         [Header("References")] 
-        [SerializeField] private CinemachineCamera freeLookCam;
+        [SerializeField] private Camera playerCamera;
         [SerializeField] private InputReader input;
 
         [Header("Settings")] [SerializeField] private float moveSpeed = 6.0f;
         [SerializeField] private float rotationSpeed = 15f;
         [SerializeField] private float smoothTime = 0.2f;
         [SerializeField] private float animationSmooth = 8f;
+        [SerializeField] private float lookSenseH = 0.1f;
+        [SerializeField] private float lookSenseV = 0.1f;
         
         //Animator parameters 
         static readonly int MoveX = Animator.StringToHash("MoveX");
         static readonly int MoveZ = Animator.StringToHash("MoveZ");
 
-        private Transform mainCam;
+        private float lookLimitV = 70f;
         private Animator animator;
-        private Vector2 animMove;
         private float currentSpeed;
         private Vector3 adjustedDirection;
         private float velocity;
         private Vector3 movement;
         private Rigidbody rb;
+        private Vector2 cameraRotation = Vector2.zero;
+        private Vector2 playerRotation = Vector2.zero;
 
         private void Awake()
         {
-            mainCam = Camera.main.transform;
             animator = GetComponentInChildren<Animator>();
-            freeLookCam.Follow = transform;
-            freeLookCam.LookAt = transform;
-            freeLookCam.OnTargetObjectWarped(transform,
-                transform.position - freeLookCam.transform.position - Vector3.forward);
             rb =  GetComponent<Rigidbody>(); 
             rb.freezeRotation = true;
         }
 
         private void Update()
         {
-            movement = new Vector3(input.Direction.x, 0, input.Direction.y).normalized;
             UpdateAnimator();
         }
 
         private void FixedUpdate()
         {
-            HandleMovement();
+            Vector3 cameraForwardXZ = new Vector3(playerCamera.transform.forward.x, 0, playerCamera.transform.forward.z).normalized;
+            Vector3 cameraRightXZ = new Vector3(playerCamera.transform.right.x, 0, playerCamera.transform.right.z).normalized;
+            Vector3 moveDirection = cameraRightXZ * input.MovementInput.x + cameraForwardXZ * input.MovementInput.y;
+            
+            Vector3 velocity = moveDirection * moveSpeed * Time.fixedDeltaTime;
+            rb.linearVelocity = velocity;   
+            //HandleMovement();
+        }
+
+        private void LateUpdate()
+        {
+            cameraRotation.x += lookSenseH * input.LookInput.x;
+            cameraRotation.y = Mathf.Clamp(cameraRotation.y - lookSenseV * input.LookInput.y, -lookLimitV, lookLimitV);
+            
+            playerRotation.x = transform.eulerAngles.x + lookSenseH * input.LookInput.x;
+            transform.rotation = Quaternion.Euler(0f, playerRotation.x, 0f);
+            
+            playerCamera.transform.rotation = Quaternion.Euler(cameraRotation.y, cameraRotation.x, 0f);
         }
 
         private void UpdateAnimator()
         {
-            var target = new Vector2(movement.x, movement.z);
-            animMove = Vector2.Lerp(animMove, target, animationSmooth * Time.deltaTime);
-            animator.SetFloat(MoveX, adjustedDirection.x);
-            animator.SetFloat(MoveZ, adjustedDirection.z);
+            animator.SetFloat(MoveX, input.MovementInput.x);
+            animator.SetFloat(MoveZ, input.MovementInput.y);
         }
 
         private void HandleMovement()
         {
             //Rotate movement direction to match camera rotation
-            adjustedDirection = Quaternion.AngleAxis(mainCam.eulerAngles.y, Vector3.up) * movement;
+            adjustedDirection = Quaternion.AngleAxis(cameraRotation.y, Vector3.up) * movement;
             if (adjustedDirection.magnitude > 0f)
             {
                 HandleRotation(adjustedDirection);
