@@ -5,8 +5,7 @@ using UnityEngine.InputSystem;
 
 namespace Platformer
 {
-    [CreateAssetMenu(fileName = "InputReader", menuName = "InputReader")]
-    public class InputReader : ScriptableObject, PlayerInputActions.IPlayerActions, PlayerInputActions.IUIActions
+    public class InputReader : MonoBehaviour, PlayerInputActions.IPlayerActions, PlayerInputActions.IUIActions
     {
         public PlayerInputActions inputActions { get; private set; }
         public Vector2 MovementInput {get ; private set;}
