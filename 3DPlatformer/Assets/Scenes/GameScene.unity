@@ -624,6 +624,8 @@ GameObject:
   - component: {fileID: 1448067507}
   - component: {fileID: 1448067506}
   - component: {fileID: 1448067510}
+  - component: {fileID: 1448067512}
+  - component: {fileID: 1448067511}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -696,11 +698,12 @@ MonoBehaviour:
   playerCamera: {fileID: 330585545}
   input: {fileID: 11400000, guid: bcecd6abb5942834c80273e4eaa5b045, type: 2}
   moveSpeed: 300
-  rotationSpeed: 40.3
+  rotationSpeed: 400
   smoothTime: 0.2
   animationSmooth: 8
   lookSenseH: 0.1
   lookSenseV: 0.1
+  lookLimitV: 70
 --- !u!4 &1448067509
 Transform:
   m_ObjectHideFlags: 0
@@ -734,6 +737,31 @@ MonoBehaviour:
   groundLayers:
     serializedVersion: 2
     m_Bits: 64
+--- !u!114 &1448067511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1448067505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b46ee4f7d6612f0499d400feb74767b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platformer.PlayerAnimation
+--- !u!114 &1448067512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1448067505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f0c63a2a83821a4e9eb9969ddd02644, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platformer.PlayerState
+  <CurrentPlayerMovementState>k__BackingField: 0
 --- !u!1 &1642084807
 GameObject:
   m_ObjectHideFlags: 0

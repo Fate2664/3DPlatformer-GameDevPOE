@@ -16,18 +16,17 @@ namespace Platformer
         [SerializeField] private float animationSmooth = 8f;
         [SerializeField] private float lookSenseH = 0.1f;
         [SerializeField] private float lookSenseV = 0.1f;
+        [SerializeField] private float lookLimitV = 70f;
+        
+        private Animator animator;
+        private Rigidbody rb;
         
         //Animator parameters 
         static readonly int MoveX = Animator.StringToHash("MoveX");
         static readonly int MoveZ = Animator.StringToHash("MoveZ");
 
-        private float lookLimitV = 70f;
-        private Animator animator;
         private float currentSpeed;
-        private Vector3 adjustedDirection;
         private float velocity;
-        private Vector3 movement;
-        private Rigidbody rb;
         private Vector2 cameraRotation = Vector2.zero;
         private Vector2 playerRotation = Vector2.zero;
 
@@ -45,24 +44,12 @@ namespace Platformer
 
         private void FixedUpdate()
         {
-            Vector3 cameraForwardXZ = new Vector3(playerCamera.transform.forward.x, 0, playerCamera.transform.forward.z).normalized;
-            Vector3 cameraRightXZ = new Vector3(playerCamera.transform.right.x, 0, playerCamera.transform.right.z).normalized;
-            Vector3 moveDirection = cameraRightXZ * input.MovementInput.x + cameraForwardXZ * input.MovementInput.y;
-            
-            Vector3 velocity = moveDirection * moveSpeed * Time.fixedDeltaTime;
-            rb.linearVelocity = velocity;   
-            //HandleMovement();
+            HandleMovement();
         }
 
         private void LateUpdate()
         {
-            cameraRotation.x += lookSenseH * input.LookInput.x;
-            cameraRotation.y = Mathf.Clamp(cameraRotation.y - lookSenseV * input.LookInput.y, -lookLimitV, lookLimitV);
-            
-            playerRotation.x = transform.eulerAngles.x + lookSenseH * input.LookInput.x;
-            transform.rotation = Quaternion.Euler(0f, playerRotation.x, 0f);
-            
-            playerCamera.transform.rotation = Quaternion.Euler(cameraRotation.y, cameraRotation.x, 0f);
+            HandleRotation();
         }
 
         private void UpdateAnimator()
@@ -73,13 +60,14 @@ namespace Platformer
 
         private void HandleMovement()
         {
-            //Rotate movement direction to match camera rotation
-            adjustedDirection = Quaternion.AngleAxis(cameraRotation.y, Vector3.up) * movement;
-            if (adjustedDirection.magnitude > 0f)
+            Vector3 cameraForwardXZ = new Vector3(playerCamera.transform.forward.x, 0, playerCamera.transform.forward.z).normalized;
+            Vector3 cameraRightXZ = new Vector3(playerCamera.transform.right.x, 0, playerCamera.transform.right.z).normalized;
+            Vector3 moveDirection = cameraRightXZ * input.MovementInput.x + cameraForwardXZ * input.MovementInput.y;
+            
+            if (moveDirection.magnitude > 0f)
             {
-                HandleRotation(adjustedDirection);
-                HandleHorizontalMovement(adjustedDirection);
-                SmoothSpeed(adjustedDirection.magnitude);
+                HandleHorizontalMovement(moveDirection);
+                SmoothSpeed(moveDirection.magnitude);
             }
             else
             {
@@ -88,17 +76,23 @@ namespace Platformer
             }
         }
 
-        void HandleHorizontalMovement(Vector3 adjustedDirection)
+        void HandleHorizontalMovement(Vector3 moveDirection)
         {
             //Move player
-            Vector3 velocity = adjustedDirection * moveSpeed * Time.fixedDeltaTime;
-            rb.linearVelocity = new Vector3(velocity.x, velocity.y, velocity.z);
+            
+            Vector3 velocity = moveDirection * moveSpeed * Time.fixedDeltaTime;
+            rb.linearVelocity = velocity;  
         }
 
-        private void HandleRotation(Vector3 adjustedDirection)
+        private void HandleRotation()
         {
-            var targetRotation = Quaternion.LookRotation(adjustedDirection);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            cameraRotation.x += lookSenseH * input.LookInput.x;
+            cameraRotation.y = Mathf.Clamp(cameraRotation.y - lookSenseV * input.LookInput.y, -lookLimitV, lookLimitV);
+            
+            var targetRotation = Quaternion.Euler(0f, cameraRotation.x, 0f);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed *  Time.deltaTime);
+            
+            playerCamera.transform.rotation = Quaternion.Euler(cameraRotation.y, cameraRotation.x, 0f);
         }
 
         void SmoothSpeed(float value)
