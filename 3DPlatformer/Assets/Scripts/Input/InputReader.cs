@@ -7,10 +7,12 @@ namespace Platformer
 {
     public class InputReader : MonoBehaviour, PlayerInputActions.IPlayerActions, PlayerInputActions.IUIActions
     {
+        [SerializeField] private bool holdToSprint = true;
+        
         public PlayerInputActions inputActions { get; private set; }
         public Vector2 MovementInput {get ; private set;}
         public Vector2 LookInput {get ; private set;}
-        
+        public bool SprintToggledOn { get; private set; }
         
         private void OnEnable()
         {
@@ -56,7 +58,14 @@ namespace Platformer
 
         public void OnSprint(InputAction.CallbackContext context)
         {
-            throw new NotImplementedException();
+            if (context.performed)
+            {
+                SprintToggledOn = holdToSprint || !SprintToggledOn;
+            }
+            else if (context.canceled)
+            {
+                SprintToggledOn = !holdToSprint && SprintToggledOn;
+            }
         }
 
         public void OnLook(InputAction.CallbackContext context)

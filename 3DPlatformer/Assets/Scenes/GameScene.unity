@@ -646,11 +646,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.PlayerController
   playerCamera: {fileID: 330585545}
   moveSpeed: 4
+  drag: 0.1
   rotationSpeed: 1000
+  runSpeed: 7
+  moveDeadZone: 0.1
   lookSenseH: 0.1
   lookSenseV: 0.1
   lookLimitV: 70
-  moveDeadZone: 0.1
 --- !u!4 &1448067509
 Transform:
   m_ObjectHideFlags: 0
@@ -707,6 +709,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4253f70468ef1e459dbfb01b2c44d94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.InputReader
+  holdToSprint: 1
 --- !u!143 &1448067514
 CharacterController:
   m_ObjectHideFlags: 0
