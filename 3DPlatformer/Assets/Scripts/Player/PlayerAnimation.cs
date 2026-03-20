@@ -13,6 +13,7 @@ namespace Platformer
         
         private static int inputXHash =  Animator.StringToHash("MoveX");
         private static int inputYHash =  Animator.StringToHash("MoveY");
+        private static int inputMagnitude =  Animator.StringToHash("MoveMagnitude");
         
         private Vector3 currentBlendInput =  Vector3.zero;
 
@@ -29,11 +30,13 @@ namespace Platformer
 
         private void UpdateAnimationState()
         {
-            Vector2 inputTarget = inputReader.MovementInput;
+            bool isSprinting = playerState.CurrentPlayerMovementState == PlayerMovementState.Sprinting;
+            Vector2 inputTarget = isSprinting ? inputReader.MovementInput * 1.5f : inputReader.MovementInput;
             currentBlendInput = Vector3.Lerp(currentBlendInput, inputTarget, locomotionBlendSpeed * Time.deltaTime);
             
             animator.SetFloat(inputXHash, currentBlendInput.x);
             animator.SetFloat(inputYHash, currentBlendInput.y);
+            animator.SetFloat(inputMagnitude, currentBlendInput.magnitude);
         }
     }
 }

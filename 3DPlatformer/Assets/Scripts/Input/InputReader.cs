@@ -75,6 +75,7 @@ namespace Platformer
 
         public void OnExit(InputAction.CallbackContext context)
         {
+            return;
         }
 
         public void OnClick(InputAction.CallbackContext context)
