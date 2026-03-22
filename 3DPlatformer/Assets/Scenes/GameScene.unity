@@ -645,11 +645,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.PlayerController
   playerCamera: {fileID: 330585545}
-  moveSpeed: 4
+  moveSpeed: 3
   drag: 0.1
   rotationSpeed: 1000
-  runSpeed: 7
+  runSpeed: 6
   moveDeadZone: 0.1
+  gravity: 25
+  jumpSpeed: 1
   lookSenseH: 0.1
   lookSenseV: 0.1
   lookLimitV: 70
@@ -728,11 +730,11 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 1.7
+  m_Height: 1.86
   m_Radius: 0.3
   m_SlopeLimit: 45
   m_StepOffset: 0.3
-  m_SkinWidth: 0.08
+  m_SkinWidth: 0.0001
   m_MinMoveDistance: 0.00001
   m_Center: {x: 0, y: 0.93, z: 0}
 --- !u!1 &1642084807

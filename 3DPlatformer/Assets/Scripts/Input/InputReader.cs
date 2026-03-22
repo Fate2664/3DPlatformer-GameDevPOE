@@ -7,13 +7,20 @@ namespace Platformer
 {
     public class InputReader : MonoBehaviour, PlayerInputActions.IPlayerActions, PlayerInputActions.IUIActions
     {
+        #region Class Variables
+
         [SerializeField] private bool holdToSprint = true;
         
         public PlayerInputActions inputActions { get; private set; }
         public Vector2 MovementInput {get ; private set;}
         public Vector2 LookInput {get ; private set;}
         public bool SprintToggledOn { get; private set; }
-        
+        public bool JumpPressed { get; private set; }
+
+        #endregion
+
+        #region Startup & Update Methods
+
         private void OnEnable()
         {
             if (inputActions == null)
@@ -31,6 +38,14 @@ namespace Platformer
                 inputActions.Disable();
             }
         }
+
+        private void LateUpdate()
+        {
+            JumpPressed = false;
+        }
+        #endregion
+
+        #region Gameplay Inputs
 
         public void OnMove(InputAction.CallbackContext context)
         {
@@ -53,7 +68,9 @@ namespace Platformer
 
         public void OnJump(InputAction.CallbackContext context)
         {
-            throw new NotImplementedException();
+            if (!context.performed) return;
+            
+            JumpPressed = true;
         }
 
         public void OnSprint(InputAction.CallbackContext context)
@@ -72,6 +89,11 @@ namespace Platformer
         {
             LookInput =  context.ReadValue<Vector2>();
         }
+        
+
+        #endregion
+
+        #region UI Inputs
 
         public void OnExit(InputAction.CallbackContext context)
         {
@@ -96,6 +118,8 @@ namespace Platformer
         public void OnApply(InputAction.CallbackContext context)
         {
         }
+
+        #endregion
 
     }
 }

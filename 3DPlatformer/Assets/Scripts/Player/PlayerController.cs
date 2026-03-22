@@ -18,6 +18,8 @@ namespace Platformer
         [SerializeField] private float rotationSpeed = 15f;
         [SerializeField] private float runSpeed = 12f;
         [SerializeField] private float moveDeadZone = 0.1f;
+        [SerializeField] private float gravity = 25f;
+        [SerializeField] private float jumpSpeed = 1.0f;
         
         [Space(10)]
         [Header("Camera Settings")] 
@@ -34,6 +36,7 @@ namespace Platformer
         private Vector2 cameraRotation = Vector2.zero;
         private Vector2 playerRotation = Vector2.zero;
         private float movingThreshold = 0.01f;
+        private float verticalVelocity = 0f;
 
         #endregion
 
@@ -60,6 +63,7 @@ namespace Platformer
         private void Update()
         {
             UpdateMovementState();
+            HandleVerticalMovement();
             HandleMovement();
         }
 
@@ -75,12 +79,22 @@ namespace Platformer
             bool isMoving = input.MovementInput !=  Vector2.zero;
             bool isMovingHorizontally = IsMovingHorizontally();
             bool isSprinting = isMovingHorizontally && input.SprintToggledOn;
+            bool isGrounded = IsGrounded();
             
             PlayerMovementState horizontalState = isSprinting ? PlayerMovementState.Sprinting :
                 isMovingHorizontally || isMoving
                 ? PlayerMovementState.Walking
                 : PlayerMovementState.Idling;
             playerState.SetPlayerMovementState(horizontalState);
+
+            if (!isGrounded && characterController.velocity.y > 0f)
+            {
+                playerState.SetPlayerMovementState(PlayerMovementState.Jumping);
+            }
+            else if (!isGrounded && characterController.velocity.y <= 0f)
+            {
+                playerState.SetPlayerMovementState(PlayerMovementState.Falling);
+            }
         }
 
         private void HandleMovement()
@@ -96,6 +110,7 @@ namespace Platformer
         void HandleHorizontalMovement(Vector3 moveDirection)
         {
             bool isSprinting = playerState.CurrentPlayerMovementState == PlayerMovementState.Sprinting;
+            bool isGrounded = playerState.IsGroundedState();
             moveDirection = Vector3.ClampMagnitude(moveDirection, 1f);
             
             //Check speed
@@ -106,8 +121,24 @@ namespace Platformer
             Vector3 currentDrag = velocity.normalized * drag;
             velocity = (velocity.magnitude > drag) ? velocity - currentDrag : Vector3.zero;
             velocity = Vector3.ClampMagnitude(velocity, speed);
+            velocity.y += verticalVelocity;
             
             characterController.Move(velocity * Time.deltaTime);
+        }
+
+        private void HandleVerticalMovement()
+        {
+            bool isGrounded = playerState.IsGroundedState();
+
+            if (isGrounded && verticalVelocity < 0f)
+                verticalVelocity = 0f;
+            
+            verticalVelocity -= gravity * Time.deltaTime;
+
+            if (input.JumpPressed && isGrounded)
+            {
+                verticalVelocity += Mathf.Sqrt(jumpSpeed * 3f * gravity);
+            }
         }
 
         private void HandleRotation()
@@ -121,12 +152,21 @@ namespace Platformer
 
             playerCamera.transform.rotation = Quaternion.Euler(cameraRotation.y, cameraRotation.x, 0f);
         }
-        
+
+        #region State Checks
+
         private bool IsMovingHorizontally()
         {
             Vector3 horizontalVelocity = new Vector3(characterController.velocity.x, 0f, characterController.velocity.z);
             return horizontalVelocity.magnitude > movingThreshold;
         }
+
+        private bool IsGrounded()
+        {
+            return characterController.isGrounded;
+        }
+
+        #endregion
     }
 }
 
