@@ -9,7 +9,7 @@ namespace Platformer
         {
             Vector3 normal =  Vector3.up;
             Vector3 center = characterController.transform.position + characterController.center;
-            float distance = characterController.height / 2f + characterController.stepOffset + 0.01f;
+            float distance = characterController.height / 2f + characterController.stepOffset + 0.1f;
             
             RaycastHit hit;
             if (Physics.SphereCast(center, characterController.radius, Vector3.down, out hit, distance, layerMask))
