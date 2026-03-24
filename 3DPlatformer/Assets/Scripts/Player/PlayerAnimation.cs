@@ -26,7 +26,7 @@ namespace Platformer
             playerState = GetComponent<PlayerState>();
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             UpdateAnimationState();
         }

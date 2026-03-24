@@ -15,12 +15,16 @@ namespace Platformer
         private float moveSpeed = 6.0f;
 
         [SerializeField] private float drag = 0.01f;
+        [SerializeField] private float walkAcceleration = 0.15f;
         [SerializeField] private float rotationSpeed = 15f;
         [SerializeField] private float runSpeed = 12f;
+        [SerializeField] private float runAcceleration = 0.25f;
         [SerializeField] private float moveDeadZone = 0.1f;
         [SerializeField] private float gravity = 25f;
         [SerializeField] private float jumpForce = 1.0f;
+        [SerializeField] private float inAirAcceleration = 0.15f;
         [SerializeField] private float jumpCooldown = 0.5f;
+        [SerializeField] private float inAirDrag = 0.001f;
 
         [Space(10)] [Header("Camera Settings")] [SerializeField]
         private float lookSenseH = 0.1f;
@@ -30,6 +34,7 @@ namespace Platformer
 
         [Space(10)] [Header("Environmental Details")] [SerializeField]
         private LayerMask groundLayer;
+
         [SerializeField] private float groundDistance = 0.5f;
 
 
@@ -93,7 +98,7 @@ namespace Platformer
         private void UpdateMovementState()
         {
             lastMoveState = playerState.CurrentPlayerMovementState;
-            
+
             bool isMoving = input.MovementInput != Vector2.zero;
             bool isMovingHorizontally = IsMovingHorizontally();
             bool isSprinting = isMovingHorizontally && input.SprintToggledOn;
@@ -106,12 +111,12 @@ namespace Platformer
                     : PlayerMovementState.Idling;
             playerState.SetPlayerMovementState(horizontalState);
 
-            if (!isGrounded && characterController.velocity.y > 0f)
+            if (!isGrounded && verticalVelocity > 0f)
             {
                 playerState.SetPlayerMovementState(PlayerMovementState.Jumping);
                 characterController.stepOffset = 0f;
             }
-            else if (!isGrounded && characterController.velocity.y <= 0f)
+            else if (!isGrounded && verticalVelocity <= 0f)
             {
                 playerState.SetPlayerMovementState(PlayerMovementState.Falling);
                 characterController.stepOffset = 0f;
@@ -140,19 +145,25 @@ namespace Platformer
             bool isSprinting = playerState.CurrentPlayerMovementState == PlayerMovementState.Sprinting;
             moveDirection = Vector3.ClampMagnitude(moveDirection, 1f);
 
+            //Check Acceleration
+            float horizontalAcceleration = !isGrounded ? inAirAcceleration :
+                                           isSprinting ? runAcceleration : walkAcceleration;
+
             //Check speed
             float speed = !isGrounded ? runSpeed :
                 isSprinting ? runSpeed : moveSpeed;
 
-            Vector3 velocity = characterController.velocity + moveDirection;
-
+            Vector3 moveDelta = moveDirection * horizontalAcceleration * Time.deltaTime;
+            Vector3 velocity = characterController.velocity + moveDelta;
             //Add drag
-            Vector3 currentDrag = velocity.normalized * drag;
-            velocity = (velocity.magnitude > drag) ? velocity - currentDrag : Vector3.zero;
+            float dragMagnitude = isGrounded ? drag : inAirDrag;
+            Vector3 currentDrag = velocity.normalized * dragMagnitude;
+            velocity = (velocity.magnitude > dragMagnitude) ? velocity - currentDrag : Vector3.zero;
+            
             velocity = Vector3.ClampMagnitude(new Vector3(velocity.x, 0f, velocity.z), speed);
             velocity.y += verticalVelocity;
             velocity = !IsGroundedWhileAirborne() ? HandleSteepWalls(velocity) : velocity;
-            
+
             characterController.Move(velocity * Time.deltaTime);
         }
 
@@ -160,6 +171,7 @@ namespace Platformer
         private void HandleVerticalMovement()
         {
             bool isGrounded = IsGrounded();
+
             verticalVelocity -= gravity * Time.deltaTime;
 
             if (isGrounded && verticalVelocity < 0f)
@@ -167,7 +179,7 @@ namespace Platformer
 
             if (input.JumpPressed && isGrounded && jumpCooldownTimer <= 0f)
             {
-                verticalVelocity += Mathf.Sqrt(jumpForce * 3f * gravity);
+                verticalVelocity += Mathf.Sqrt(jumpForce * 3 * gravity);
                 jumpCooldownTimer = jumpCooldown;
             }
 
@@ -220,8 +232,10 @@ namespace Platformer
 
         private bool IsGroundedWhileGrounded()
         {
-            Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - characterController.radius + 0.1f, transform.position.z);
-            bool grounded = Physics.CheckSphere(spherePosition, characterController.radius, groundLayer, QueryTriggerInteraction.Ignore);
+            Vector3 spherePosition = new Vector3(transform.position.x,
+                transform.position.y - characterController.radius + 0.1f, transform.position.z);
+            bool grounded = Physics.CheckSphere(spherePosition, characterController.radius, groundLayer,
+                QueryTriggerInteraction.Ignore);
             return grounded;
         }
 
@@ -230,17 +244,18 @@ namespace Platformer
             Vector3 normal = CharacterControllerUtils.GetNormalWithSphereCast(characterController, groundLayer);
             float angle = Vector3.Angle(normal, Vector3.up);
             bool validAngle = angle <= characterController.slopeLimit + 0.5f;
-            
+
             return characterController.isGrounded && validAngle;
         }
 
         #endregion
-        
+
         private void OnDrawGizmosSelected()
         {
             CharacterController cc = GetComponent<CharacterController>();
             if (cc == null) return;
-            Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - cc.radius + 0.1f, transform.position.z);
+            Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - cc.radius + 0.1f,
+                transform.position.z);
             bool grounded = Physics.CheckSphere(spherePosition, cc.radius, groundLayer, QueryTriggerInteraction.Ignore);
 
             Gizmos.color = grounded ? Color.green : Color.red;

@@ -759,12 +759,16 @@ MonoBehaviour:
   playerCamera: {fileID: 330585545}
   moveSpeed: 2
   drag: 0.1
+  walkAcceleration: 100
   rotationSpeed: 1000
   runSpeed: 4
+  runAcceleration: 150
   moveDeadZone: 0.1
   gravity: 25
   jumpForce: 1.2
+  inAirAcceleration: 150
   jumpCooldown: 0.8
+  inAirDrag: 0.005
   lookSenseH: 0.1
   lookSenseV: 0.1
   lookLimitV: 70
@@ -848,12 +852,12 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 1.8
-  m_Radius: 0.22
+  m_Radius: 0.225
   m_SlopeLimit: 45
   m_StepOffset: 0.3
-  m_SkinWidth: 0.1
+  m_SkinWidth: 0.01
   m_MinMoveDistance: 0.00001
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 0.91, z: 0}
 --- !u!1 &1604697141
 GameObject:
   m_ObjectHideFlags: 0
