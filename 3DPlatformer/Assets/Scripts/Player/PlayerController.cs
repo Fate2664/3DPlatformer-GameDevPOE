@@ -30,6 +30,7 @@ namespace Platformer
 
         [Space(10)] [Header("Environmental Details")] [SerializeField]
         private LayerMask groundLayer;
+        [SerializeField] private float groundDistance = 0.5f;
 
 
         private InputReader input;
@@ -45,6 +46,8 @@ namespace Platformer
         private float antiBump;
         private float jumpCooldownTimer = 0f;
         private float stepOffset;
+
+        private PlayerMovementState lastMoveState = PlayerMovementState.Falling;
 
         #endregion
 
@@ -74,6 +77,7 @@ namespace Platformer
         {
             if (jumpCooldownTimer > 0f)
                 jumpCooldownTimer -= Time.deltaTime;
+
             UpdateMovementState();
             HandleVerticalMovement();
             HandleMovement();
@@ -88,6 +92,8 @@ namespace Platformer
 
         private void UpdateMovementState()
         {
+            lastMoveState = playerState.CurrentPlayerMovementState;
+            
             bool isMoving = input.MovementInput != Vector2.zero;
             bool isMovingHorizontally = IsMovingHorizontally();
             bool isSprinting = isMovingHorizontally && input.SprintToggledOn;
@@ -130,8 +136,8 @@ namespace Platformer
 
         void HandleHorizontalMovement(Vector3 moveDirection)
         {
+            bool isGrounded = IsGrounded();
             bool isSprinting = playerState.CurrentPlayerMovementState == PlayerMovementState.Sprinting;
-            bool isGrounded = playerState.IsGroundedState();
             moveDirection = Vector3.ClampMagnitude(moveDirection, 1f);
 
             //Check speed
@@ -145,26 +151,29 @@ namespace Platformer
             velocity = (velocity.magnitude > drag) ? velocity - currentDrag : Vector3.zero;
             velocity = Vector3.ClampMagnitude(new Vector3(velocity.x, 0f, velocity.z), speed);
             velocity.y += verticalVelocity;
-            velocity = !isGrounded ? HandleSteepWalls(velocity) : velocity;
-
+            velocity = !IsGroundedWhileAirborne() ? HandleSteepWalls(velocity) : velocity;
+            
             characterController.Move(velocity * Time.deltaTime);
         }
 
         //Jumping
         private void HandleVerticalMovement()
         {
-            bool isGrounded = playerState.IsGroundedState();
-
+            bool isGrounded = IsGrounded();
             verticalVelocity -= gravity * Time.deltaTime;
 
             if (isGrounded && verticalVelocity < 0f)
                 verticalVelocity = -antiBump;
 
-
             if (input.JumpPressed && isGrounded && jumpCooldownTimer <= 0f)
             {
-                verticalVelocity += antiBump + Mathf.Sqrt(jumpForce * 3f * gravity);
+                verticalVelocity += Mathf.Sqrt(jumpForce * 3f * gravity);
                 jumpCooldownTimer = jumpCooldown;
+            }
+
+            if (playerState.IsStateGroundedState(lastMoveState) && !isGrounded)
+            {
+                verticalVelocity += antiBump;
             }
         }
 
@@ -184,9 +193,8 @@ namespace Platformer
         {
             Vector3 normal = CharacterControllerUtils.GetNormalWithSphereCast(characterController, groundLayer);
             float angle = Vector3.Angle(normal, Vector3.up);
-            bool validAngle = angle < characterController.slopeLimit;
-
-            if (!validAngle && verticalVelocity < 0f)
+            bool validAngle = angle <= characterController.slopeLimit + 0.5f;
+            if (!validAngle && verticalVelocity <= 0f)
                 velocity = Vector3.ProjectOnPlane(velocity, normal);
 
             return velocity;
@@ -212,11 +220,8 @@ namespace Platformer
 
         private bool IsGroundedWhileGrounded()
         {
-            Vector3 spherePosition = new Vector3(transform.position.x,
-                transform.position.y - characterController.radius, transform.position.z);
-
-            bool grounded = Physics.CheckSphere(spherePosition, characterController.radius, groundLayer,
-                QueryTriggerInteraction.Ignore);
+            Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - characterController.radius + 0.1f, transform.position.z);
+            bool grounded = Physics.CheckSphere(spherePosition, characterController.radius, groundLayer, QueryTriggerInteraction.Ignore);
             return grounded;
         }
 
@@ -224,12 +229,22 @@ namespace Platformer
         {
             Vector3 normal = CharacterControllerUtils.GetNormalWithSphereCast(characterController, groundLayer);
             float angle = Vector3.Angle(normal, Vector3.up);
-            print(angle);
-            bool validAngle = angle < characterController.slopeLimit;
-
+            bool validAngle = angle <= characterController.slopeLimit + 0.5f;
+            
             return characterController.isGrounded && validAngle;
         }
 
         #endregion
+        
+        private void OnDrawGizmosSelected()
+        {
+            CharacterController cc = GetComponent<CharacterController>();
+            if (cc == null) return;
+            Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - cc.radius + 0.1f, transform.position.z);
+            bool grounded = Physics.CheckSphere(spherePosition, cc.radius, groundLayer, QueryTriggerInteraction.Ignore);
+
+            Gizmos.color = grounded ? Color.green : Color.red;
+            Gizmos.DrawWireSphere(spherePosition, cc.radius);
+        }
     }
 }
