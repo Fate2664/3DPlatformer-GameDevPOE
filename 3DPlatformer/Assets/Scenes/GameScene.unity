@@ -758,17 +758,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.PlayerController
   playerCamera: {fileID: 330585545}
   moveSpeed: 2
+  gravity: 25
   drag: 0.1
   walkAcceleration: 100
   rotationSpeed: 1000
   runSpeed: 4
   runAcceleration: 150
-  moveDeadZone: 0.1
-  gravity: 25
   jumpForce: 1.2
   inAirAcceleration: 150
   jumpCooldown: 0.8
   inAirDrag: 0.005
+  climbSpeed: 5
+  climbCheckDistance: 0.3
+  maxClimbAngle: 90
+  ledgeSnapForward: 0.05
+  ledgeSnapUp: 0.01
   lookSenseH: 0.1
   lookSenseV: 0.1
   lookLimitV: 70
@@ -776,6 +780,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 65
   groundDistance: 0.5
+  climbableLayer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!4 &1448067509
 Transform:
   m_ObjectHideFlags: 0
@@ -870,7 +877,7 @@ GameObject:
   - component: {fileID: 1604697144}
   - component: {fileID: 1604697143}
   - component: {fileID: 1604697142}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -963,13 +970,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1604697141}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.97719777, y: -0, z: -0, w: 0.21233127}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 9.47, y: 1.45, z: 8.2}
   m_LocalScale: {x: 12.0045595, y: 6.16101, z: 6.404886}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: -155.482, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &1642084807
 GameObject:
   m_ObjectHideFlags: 0
