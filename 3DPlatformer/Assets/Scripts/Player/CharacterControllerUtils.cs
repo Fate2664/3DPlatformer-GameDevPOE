@@ -26,11 +26,11 @@ namespace Platformer
             out RaycastHit hit)
         {
             Vector3 center = cc.transform.TransformPoint(cc.center);
-            float half = Mathf.Max(0f, cc.radius * 0.5f - cc.radius);
+            float half = Mathf.Max(0f, (cc.height * 0.5f) - cc.radius);
             Vector3 top = center + Vector3.up * half;
             Vector3 bottom = center - Vector3.up * half;
 
-            return Physics.CapsuleCast(top, bottom, cc.radius * .95f, direction.normalized, out hit, distance, mask,
+            return Physics.CapsuleCast(top, bottom, cc.radius * 0.95f, direction.normalized, out hit, distance, mask,
                 QueryTriggerInteraction.Ignore);
         }
     }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Platformer
 {
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : MonoBehaviour, IRespawnable
     {
         #region Class Variables
 
@@ -115,6 +115,8 @@ namespace Platformer
 
         #endregion
 
+        #region UpdateState Methods
+
         private void UpdateMovementState()
         {
             lastMoveState = playerState.CurrentPlayerMovementState;
@@ -178,6 +180,18 @@ namespace Platformer
             isClimbing = false;
         }
 
+        private void ResetToRespawnState()
+        {
+            verticalVelocity = 0f;
+            jumpCooldownTimer = 0f;
+            isClimbing = false;
+            lastMoveState = PlayerMovementState.Idling;
+            characterController.stepOffset = stepOffset;
+            playerState.SetPlayerMovementState(PlayerMovementState.Idling);
+        }
+
+        #endregion
+
         #region Movement & Camera Methods
 
         private Vector3 GetCameraRelativeMoveDirection()
@@ -194,7 +208,7 @@ namespace Platformer
             bool isGrounded = IsGrounded();
             bool isSprinting = playerState.CurrentPlayerMovementState == PlayerMovementState.Sprinting;
             moveDirection = Vector3.ClampMagnitude(moveDirection, 1f);
-
+            
             //Check Acceleration
             float horizontalAcceleration = !isGrounded ? inAirAcceleration :
                 isSprinting ? runAcceleration : walkAcceleration;
@@ -212,7 +226,8 @@ namespace Platformer
 
             velocity = Vector3.ClampMagnitude(new Vector3(velocity.x, 0f, velocity.z), speed);
             velocity.y += verticalVelocity;
-            velocity = !IsGroundedWhileAirborne() ? HandleSteepWalls(velocity) : velocity;
+            if (!isGrounded)
+                velocity = HandleSteepWalls(velocity);
 
             characterController.Move(velocity * Time.deltaTime);
         }
@@ -254,10 +269,9 @@ namespace Platformer
             playerCamera.transform.rotation = Quaternion.Euler(cameraRotation.y, cameraRotation.x, 0f);
         }
 
-
         private Vector3 HandleSteepWalls(Vector3 velocity)
         {
-            Vector3 normal = CharacterControllerUtils.GetNormalWithSphereCast(characterController, groundLayer | climbableLayer);
+            Vector3 normal = CharacterControllerUtils.GetNormalWithSphereCast(characterController, groundLayer);
             float angle = Vector3.Angle(normal, Vector3.up);
             bool validAngle = angle <= characterController.slopeLimit + 0.5f;
             if (!validAngle && verticalVelocity <= 0f)
@@ -276,7 +290,6 @@ namespace Platformer
 
             float angle = Vector3.Angle(hit.normal, Vector3.up);
             return angle > characterController.slopeLimit + 1f && angle <= maxClimbAngle;
-            print(TryGetClimbWall(moveDir, out hit));
         }
 
         private bool TryMoveOffWall()
@@ -322,6 +335,23 @@ namespace Platformer
             characterController.Move(desired * Time.deltaTime);
         }
 
+        #endregion
+        
+        #region Respawning
+
+        public void RespawnAt(RespawnPointData checkpoint)
+        {
+            ResetToRespawnState();
+            
+            Vector3 rotation = checkpoint.Rotation.eulerAngles;
+            cameraRotation.x = rotation.y;
+            cameraRotation.y = 0f;
+            
+            characterController.enabled = false;
+            transform.SetPositionAndRotation(checkpoint.Position, checkpoint.Rotation);
+            playerCamera.transform.rotation = Quaternion.Euler(cameraRotation.y, cameraRotation.x, 0f);
+            characterController.enabled = true;
+        }
         #endregion
 
         #region State Checks
