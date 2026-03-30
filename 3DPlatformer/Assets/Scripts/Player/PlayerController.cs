@@ -11,6 +11,8 @@ namespace Platformer
         [Header("References")] [SerializeField]
         private Camera playerCamera;
 
+        [SerializeField] private Transform playerRoot;
+
         [Header("Movement Settings")] [SerializeField]
         private float moveSpeed = 6.0f;
         [SerializeField] private float groundLinearDamping = 6f;
@@ -87,6 +89,8 @@ namespace Platformer
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            targetYaw = transform.eulerAngles.y;
+            targetPitch = playerCamera.transform.eulerAngles.x;
         }
 
         #endregion
@@ -97,6 +101,7 @@ namespace Platformer
         {
             if (input.JumpPressed)
                 jumpQueued = true;
+
             targetYaw += lookSenseH * input.LookInput.x;
             targetPitch = Mathf.Clamp(targetPitch - lookSenseV * input.LookInput.y, -lookLimitV, lookLimitV);
         }
@@ -105,9 +110,6 @@ namespace Platformer
         {
             if (jumpCooldownTimer > 0f)
                 jumpCooldownTimer -= Time.fixedDeltaTime;
-            
-            Quaternion bodyRotation = Quaternion.Euler(0f, targetYaw, 0f);
-            rb.MoveRotation(bodyRotation);
             
             Vector3 moveDirection = GetCameraRelativeMoveDirection();
             UpdateClimbState(moveDirection);
@@ -130,6 +132,7 @@ namespace Platformer
         private void LateUpdate()
         {
             playerCamera.transform.rotation = Quaternion.Euler(targetPitch, targetYaw, 0f);
+            playerRoot.rotation = Quaternion.Euler(0f, targetYaw, 0f);
         }
 
         #endregion
@@ -178,7 +181,7 @@ namespace Platformer
         private void UpdateClimbState(Vector3 moveDir)
         {
             bool isPressingIntoWall =
-                moveDir.sqrMagnitude > 0.001f && Vector3.Dot(moveDir.normalized, transform.forward) > 0f;
+                moveDir.sqrMagnitude > 0.001f && Vector3.Dot(moveDir.normalized, GetLookForwardXZ()) > 0f;
 
             if (isPressingIntoWall && TryGetClimbWall(moveDir, out RaycastHit wallHit))
             {
@@ -222,6 +225,13 @@ namespace Platformer
             Vector3 cameraRightXZ = new Vector3(playerCamera.transform.right.x, 0, playerCamera.transform.right.z)
                 .normalized;
             return cameraRightXZ * input.MovementInput.x + cameraForwardXZ * input.MovementInput.y;
+        }
+
+        private Vector3 GetLookForwardXZ()
+        {
+            Vector3 forward = playerCamera.transform.forward;
+            forward.y = 0;
+            return forward.sqrMagnitude > 0.001f ? forward.normalized : Vector3.forward;
         }
 
         void HandleHorizontalMovement(Vector3 moveDirection, bool isGrounded)
@@ -285,7 +295,7 @@ namespace Platformer
 
         private bool TryGetClimbWall(Vector3 moveDir, out RaycastHit hit)
         {
-            Vector3 probeDir = moveDir.sqrMagnitude > 0.001f ? moveDir.normalized : transform.forward;
+            Vector3 probeDir = moveDir.sqrMagnitude > 0.001f ? moveDir.normalized : GetLookForwardXZ();
 
             if (!CharacterControllerUtils.TryGetWallHit(col, probeDir, climbCheckDistance,
                     climbableLayer, out hit))
@@ -345,16 +355,16 @@ namespace Platformer
         {
             ResetToRespawnState();
 
-            Vector3 rotation = checkpoint.Rotation.eulerAngles;
-            cameraRotation.x = rotation.y;
-            cameraRotation.y = 0f;
+            targetYaw = checkpoint.Rotation.eulerAngles.y;
+            targetPitch = 0f;
             
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             rb.position = checkpoint.Position;
             rb.rotation = checkpoint.Rotation;
             
-            playerCamera.transform.rotation = Quaternion.Euler(cameraRotation.y, cameraRotation.x, 0f);
+            playerCamera.transform.rotation = Quaternion.Euler(targetPitch, targetYaw, 0f);
+            playerRoot.rotation = Quaternion.Euler(0f, targetYaw, 0f);
         }
 
         #endregion

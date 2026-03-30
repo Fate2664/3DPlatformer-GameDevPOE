@@ -16,6 +16,7 @@ namespace Platformer
         public Vector2 LookInput {get ; private set;}
         public bool SprintToggledOn { get; private set; }
         public bool JumpPressed { get; private set; }
+        public bool NextPressed { get; private set; }
 
         #endregion
 
@@ -27,6 +28,7 @@ namespace Platformer
             {
                 inputActions = new PlayerInputActions();
                 inputActions.Player.SetCallbacks(this);
+                inputActions.UI.SetCallbacks(this);
             }
             inputActions.Enable();
         }
@@ -42,6 +44,7 @@ namespace Platformer
         private void LateUpdate()
         {
             JumpPressed = false;
+            NextPressed = false;
         }
         #endregion
 
@@ -55,10 +58,6 @@ namespace Platformer
         public void OnAttack(InputAction.CallbackContext context)
         {
             return;
-        }
-
-        public void OnInteract(InputAction.CallbackContext context)
-        {
         }
 
         public void OnCrouch(InputAction.CallbackContext context)
@@ -108,6 +107,13 @@ namespace Platformer
         public void OnRightClick(InputAction.CallbackContext context)
         {
             return;
+        }
+
+        public void OnNext(InputAction.CallbackContext context)
+        {
+            if (!context.performed) return;
+            
+            NextPressed = true;
         }
 
         public void OnNavigate(InputAction.CallbackContext context)

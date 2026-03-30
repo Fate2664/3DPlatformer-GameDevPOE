@@ -34,15 +34,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Interact",
-                    "type": "Button",
-                    "id": "386caa87-c3c8-4f83-8836-993c9626739b",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "Hold",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Crouch",
                     "type": "Button",
                     "id": "d3e20cb0-f43d-437a-898c-64c87e1547d9",
@@ -370,28 +361,6 @@
                 },
                 {
                     "name": "",
-                    "id": "0c31125f-b87b-4141-a0fe-16d30337eb8a",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Interact",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "d55ab8bc-9e19-47b4-8a4c-cdcfc7805dd6",
-                    "path": "<Gamepad>/buttonNorth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Interact",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "bf13bb22-6b25-4367-95d5-c458444ad130",
                     "path": "<Gamepad>/buttonEast",
                     "interactions": "",
@@ -459,6 +428,15 @@
                     "type": "PassThrough",
                     "id": "78396db5-5656-4392-8aab-fe35a1a2820c",
                     "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Next",
+                    "type": "Button",
+                    "id": "68a15633-d1a5-4b22-815e-71b288ef990d",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -803,6 +781,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "RightClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "08a95cc5-b60f-4801-bb89-637248fa0efd",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Next",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
