@@ -17,7 +17,6 @@ namespace Platformer
         private float moveSpeed = 6.0f;
         [SerializeField] private float groundLinearDamping = 6f;
         [SerializeField] private float walkAcceleration = 0.15f;
-        [SerializeField] private float rotationSpeed = 15f;
         [SerializeField] private float slopeLimit = 45f;
         [SerializeField] private float stepOffset = 0.03f;
         [Space(10)] [SerializeField] private float runSpeed = 12f;
@@ -255,6 +254,20 @@ namespace Platformer
             horizontalVelocity = Vector3.MoveTowards(horizontalVelocity, targetVelocity, horizontalAcceleration * Time.fixedDeltaTime);            
             velocity.x = horizontalVelocity.x + platformVelocity.x;
             velocity.z = horizontalVelocity.z + platformVelocity.z;
+
+            if (isGrounded &&
+                CharacterControllerUtils.TryGetStepOffset(
+                    col,
+                    new Vector3(velocity.x, 0f, velocity.z) * Time.fixedDeltaTime,
+                    stepOffset,
+                    slopeLimit,
+                    groundLayer | climbableLayer,
+                    groundLayer,
+                    out Vector3 stepDelta))
+            {
+                rb.position += stepDelta;
+                velocity.y = Mathf.Max(velocity.y, 0f);
+            }
             
             if (!isGrounded)
                 velocity = HandleSteepWalls(velocity);
@@ -297,7 +310,7 @@ namespace Platformer
         {
             Vector3 probeDir = moveDir.sqrMagnitude > 0.001f ? moveDir.normalized : GetLookForwardXZ();
 
-            if (!CharacterControllerUtils.TryGetWallHit(col, probeDir, climbCheckDistance,
+            if (!CharacterControllerUtils.CheckWallHit(col, probeDir, climbCheckDistance,
                     climbableLayer, out hit))
                 return false;
 
