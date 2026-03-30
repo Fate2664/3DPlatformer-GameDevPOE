@@ -42,17 +42,15 @@ namespace Platformer
             return value;
         }
 
-        public bool TryPeek(out T value)
+        public void ReplaceTop(T item)
         {
             if (IsEmpty)
             {
-                value = default;
-                return false;
+                Push(item);
+                return;
             }
-            
-            value = top.Value;
-            return true;
-        }
+            top.Value = item;
+        }        
 
         public void Clear()
         {

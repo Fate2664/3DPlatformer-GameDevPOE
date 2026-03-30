@@ -2,18 +2,13 @@ using UnityEngine;
 
 namespace Platformer
 {
-    public class CoinPickup : MonoBehaviour
+    public class CoinPickup : PickupEffect
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-        
-        }
+        [SerializeField] private int scoreAmount = 1;
 
-        // Update is called once per frame
-        void Update()
+        public override void ApplyEffect(PlayerStats playerStats)
         {
-        
+            playerStats.IncrementScore(scoreAmount);
         }
     }
 }

@@ -6,6 +6,7 @@ namespace Platformer
     public class Respawner : MonoBehaviour
     {
         [SerializeField] private PlayerController playerController;
+        [SerializeField] private PlayerStats playerStats;
         [SerializeField] private Transform startRespawnPoint;
         
         private CheckpointStack<RespawnPointData>  checkpointHistory = new ();
@@ -27,13 +28,12 @@ namespace Platformer
                 return;
             
             respawnQueued = false;
-            if (checkpointHistory.Count > 0)
-                respawnable.RespawnAt(checkpointHistory.Peek());
+            HandleRespawn();
         }
 
         public void RegisterCheckpoint(string checkpointId, Transform checkpointTransform)
         {
-            checkpointHistory.Push(new RespawnPointData(checkpointId, checkpointTransform.position, checkpointTransform.rotation));
+            checkpointHistory.Push(new RespawnPointData(checkpointId, checkpointTransform.position, checkpointTransform.rotation, playerStats.CreateSnapshot()));
         }
 
         public void RespawnPlayer()
@@ -47,6 +47,30 @@ namespace Platformer
                 checkpointHistory.Pop();
 
             respawnQueued = true;
+        }
+
+        private void HandleRespawn()
+        {
+            bool hasLivesRemaining = playerStats.Lives > 0;
+
+            if (!hasLivesRemaining)
+            {
+                ResetRunToStart();
+                return;
+            }
+            
+            
+            playerStats.DecrementLives();
+            respawnable.RespawnAt(checkpointHistory.Peek());
+        }
+
+        private void ResetRunToStart()
+        {
+            checkpointHistory.Clear();
+            
+            RegisterCheckpoint("Start", startRespawnPoint);
+            playerStats.RestoreLives();
+            respawnable.RespawnAt(checkpointHistory.Peek());
         }
     }
 }
