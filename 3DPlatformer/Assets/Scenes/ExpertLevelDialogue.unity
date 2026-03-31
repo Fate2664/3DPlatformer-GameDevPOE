@@ -157,7 +157,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8026093097088931443, guid: a0f077293626e424093ebb42a08da069, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -504.18115
+      value: -421.5287
       objectReference: {fileID: 0}
     - target: {fileID: 8026093097088931443, guid: a0f077293626e424093ebb42a08da069, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1381,7 +1381,7 @@ MonoBehaviour:
         Raw: 1920
         Type: 0
       Y:
-        Raw: 1245.3049
+        Raw: 1080
         Type: 0
       Z:
         Raw: 0
@@ -1561,7 +1561,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.47382998, y: 1.73, z: -0.49165}
-  m_LocalScale: {x: 0.0009272432, y: 0.0009272432, z: 0.0009272432}
+  m_LocalScale: {x: 0.0010691672, y: 0.0010691672, z: 0.0010691672}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 24322515}
@@ -2610,7 +2610,7 @@ Transform:
   m_GameObject: {fileID: 1732371419}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 576.5706, y: 544.1147, z: 0}
+  m_LocalPosition: {x: 576.5706, y: 470.63663, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3172,6 +3172,50 @@ PrefabInstance:
       propertyPath: DialogueManager
       value: 
       objectReference: {fileID: 24322516}
+    - target: {fileID: 212185889420358361, guid: 6e229ddd8febca5499f317edfe3d2184, type: 3}
+      propertyPath: dialogueList.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 212185889420358361, guid: 6e229ddd8febca5499f317edfe3d2184, type: 3}
+      propertyPath: 'dialogueList.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 2d89214b467c8c044bb1c98e75ddd61e, type: 2}
+    - target: {fileID: 212185889420358361, guid: 6e229ddd8febca5499f317edfe3d2184, type: 3}
+      propertyPath: 'dialogueList.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: fb37f5d0e63709e4085899a93e35d68d, type: 2}
+    - target: {fileID: 212185889420358361, guid: 6e229ddd8febca5499f317edfe3d2184, type: 3}
+      propertyPath: 'dialogueList.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 96377cef7cdd4be4b957b9d041b93a45, type: 2}
+    - target: {fileID: 212185889420358361, guid: 6e229ddd8febca5499f317edfe3d2184, type: 3}
+      propertyPath: 'dialogueList.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 54d17fe3d601f4340b23699f30c1539d, type: 2}
+    - target: {fileID: 212185889420358361, guid: 6e229ddd8febca5499f317edfe3d2184, type: 3}
+      propertyPath: 'dialogueList.Array.data[4]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 8b221d96614bdbb449238537cfa43a7c, type: 2}
+    - target: {fileID: 212185889420358361, guid: 6e229ddd8febca5499f317edfe3d2184, type: 3}
+      propertyPath: 'dialogueList.Array.data[5]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 418242c31f98fd443b62537964b9b3cb, type: 2}
+    - target: {fileID: 212185889420358361, guid: 6e229ddd8febca5499f317edfe3d2184, type: 3}
+      propertyPath: 'dialogueList.Array.data[6]'
+      value: 
+      objectReference: {fileID: 11400000, guid: f5076dd14ec57ba4d8a2d5fac63c221e, type: 2}
+    - target: {fileID: 212185889420358361, guid: 6e229ddd8febca5499f317edfe3d2184, type: 3}
+      propertyPath: 'dialogueList.Array.data[7]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 2d89214b467c8c044bb1c98e75ddd61e, type: 2}
+    - target: {fileID: 212185889420358361, guid: 6e229ddd8febca5499f317edfe3d2184, type: 3}
+      propertyPath: 'dialogueList.Array.data[8]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 2d89214b467c8c044bb1c98e75ddd61e, type: 2}
+    - target: {fileID: 212185889420358361, guid: 6e229ddd8febca5499f317edfe3d2184, type: 3}
+      propertyPath: 'dialogueList.Array.data[9]'
+      value: 
+      objectReference: {fileID: 11400000, guid: c98a83f7f52e904428e57b8c9deaf009, type: 2}
     - target: {fileID: 1443932662230139769, guid: 6e229ddd8febca5499f317edfe3d2184, type: 3}
       propertyPath: m_Name
       value: DialogueTrigger
