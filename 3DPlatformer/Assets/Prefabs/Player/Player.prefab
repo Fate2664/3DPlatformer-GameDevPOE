@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 8664504747575506722}
   - component: {fileID: 3896616583009280813}
   - component: {fileID: 5664247581256510909}
+  - component: {fileID: 6264744684180181924}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -199,6 +200,18 @@ MonoBehaviour:
   startingScore: 0
   scoreText: {fileID: 0}
   livesText: {fileID: 0}
+--- !u!114 &6264744684180181924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1060405343190849384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a412f2b625ca44a49a67d59f8e31d3ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platformer.PlatformCollisionHandler
 --- !u!1 &3335438140829548946
 GameObject:
   m_ObjectHideFlags: 0

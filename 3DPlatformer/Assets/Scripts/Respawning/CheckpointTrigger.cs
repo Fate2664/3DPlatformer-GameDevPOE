@@ -7,13 +7,14 @@ namespace Platformer
     {
         [SerializeField] private Respawner respawner;
         [SerializeField] private string checkpointId;
+        [SerializeField] private Transform spawnPoint;
 
         private void OnTriggerEnter(Collider other)
         {
             if (!other.CompareTag("Player"))
                 return;
             
-            respawner.RegisterCheckpoint(checkpointId, transform);
+            respawner.RegisterCheckpoint(checkpointId, spawnPoint);
         }
     }
 }

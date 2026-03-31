@@ -10,7 +10,6 @@ namespace Platformer
 
         [Header("References")] [SerializeField]
         private Camera playerCamera;
-
         [SerializeField] private Transform playerRoot;
 
         [Header("Movement Settings")] [SerializeField]
@@ -36,13 +35,11 @@ namespace Platformer
 
         [Space(10)] [Header("Camera Settings")] [SerializeField]
         private float lookSenseH = 0.1f;
-
         [SerializeField] private float lookSenseV = 0.1f;
         [SerializeField] private float lookLimitV = 70f;
 
         [Space(10)] [Header("Environmental Details")] [SerializeField]
         private LayerMask groundLayer;
-
         [SerializeField] private float groundDistance = 0.5f;
         [SerializeField] private LayerMask climbableLayer;
 
@@ -52,10 +49,6 @@ namespace Platformer
         private Rigidbody rb;
         private CapsuleCollider col;
 
-        private float currentSpeed;
-        private float moveDeadZone = 0.1f;
-        private Vector2 cameraRotation = Vector2.zero;
-        private Vector2 playerRotation = Vector2.zero;
         private float targetYaw;
         private float targetPitch;
         private float movingThreshold = 0.01f;
@@ -69,7 +62,7 @@ namespace Platformer
         private float ledgeProbeDown = 2.0f;
         private PlatformMover activePlatform;
 
-        private PlayerMovementState lastMoveState = PlayerMovementState.Falling;
+        private PlayerMovementState lastMoveState = PlayerMovementState.Idling;
 
         #endregion
 
@@ -109,16 +102,15 @@ namespace Platformer
         {
             if (jumpCooldownTimer > 0f)
                 jumpCooldownTimer -= Time.fixedDeltaTime;
-            
+
             Vector3 moveDirection = GetCameraRelativeMoveDirection();
             UpdateClimbState(moveDirection);
             UpdateMovementState();
-            
+
             bool isGrounded = IsGrounded();
             rb.linearDamping = isClimbing ? 0f : isGrounded ? groundLinearDamping : inAirLinearDamping;
-            
-           
-            
+
+
             if (isClimbing)
                 HandleClimbMovement();
             else
@@ -250,25 +242,21 @@ namespace Platformer
             Vector3 velocity = rb.linearVelocity;
             Vector3 horizontalVelocity = new Vector3(velocity.x, 0f, velocity.z);
             Vector3 targetVelocity = moveDirection * speed;
-            
-            horizontalVelocity = Vector3.MoveTowards(horizontalVelocity, targetVelocity, horizontalAcceleration * Time.fixedDeltaTime);            
+
+            horizontalVelocity = Vector3.MoveTowards(horizontalVelocity, targetVelocity,
+                horizontalAcceleration * Time.fixedDeltaTime);
             velocity.x = horizontalVelocity.x + platformVelocity.x;
             velocity.z = horizontalVelocity.z + platformVelocity.z;
 
             if (isGrounded &&
-                CharacterControllerUtils.TryGetStepOffset(
-                    col,
-                    new Vector3(velocity.x, 0f, velocity.z) * Time.fixedDeltaTime,
-                    stepOffset,
-                    slopeLimit,
-                    groundLayer | climbableLayer,
-                    groundLayer,
-                    out Vector3 stepDelta))
+                CharacterControllerUtils.TryGetStepOffset(col,
+                    new Vector3(velocity.x, 0f, velocity.z) * Time.fixedDeltaTime, stepOffset, slopeLimit,
+                    groundLayer | climbableLayer, groundLayer, out Vector3 stepDelta))
             {
                 rb.position += stepDelta;
                 velocity.y = Mathf.Max(velocity.y, 0f);
             }
-            
+
             if (!isGrounded)
                 velocity = HandleSteepWalls(velocity);
 
@@ -279,15 +267,15 @@ namespace Platformer
         {
             if (!jumpQueued || !isGrounded || jumpCooldownTimer > 0f)
                 return;
-            
+
             Vector3 platformVelocity = activePlatform != null ? activePlatform.Velocity : Vector3.zero;
             Vector3 velocity = rb.linearVelocity;
-            velocity.x += platformVelocity.x;
-            velocity.z += platformVelocity.z;
+            //velocity.x += platformVelocity.x / 2;
+            //velocity.z += platformVelocity.z / 2;
             velocity.y = 0f;
             rb.linearVelocity = velocity;
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            
+
             jumpCooldownTimer = jumpCooldown;
         }
 
@@ -302,8 +290,9 @@ namespace Platformer
 
             return velocity;
         }
+
         #endregion
-        
+
         #region Climbing
 
         private bool TryGetClimbWall(Vector3 moveDir, out RaycastHit hit)
@@ -370,12 +359,12 @@ namespace Platformer
 
             targetYaw = checkpoint.Rotation.eulerAngles.y;
             targetPitch = 0f;
-            
+
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             rb.position = checkpoint.Position;
             rb.rotation = checkpoint.Rotation;
-            
+
             playerCamera.transform.rotation = Quaternion.Euler(targetPitch, targetYaw, 0f);
             playerRoot.rotation = Quaternion.Euler(0f, targetYaw, 0f);
         }
@@ -405,17 +394,10 @@ namespace Platformer
             const float skin = 0.02f;
             float castDistance = groundDistance + skin;
 
-            if (!Physics.SphereCast(
-                    bottomSphereCenter + Vector3.up * skin,
-                    col.radius * 0.95f,
-                    Vector3.down,
-                    out hit,
-                    castDistance,
-                    groundLayer | climbableLayer,
-                    QueryTriggerInteraction.Ignore))
-            {
+            if (!Physics.SphereCast(bottomSphereCenter + Vector3.up * skin, col.radius * 0.95f, Vector3.down, out hit,
+                    castDistance, groundLayer | climbableLayer, QueryTriggerInteraction.Ignore))
                 return false;
-            }
+
 
             float angle = Vector3.Angle(hit.normal, Vector3.up);
             return angle <= slopeLimit;
