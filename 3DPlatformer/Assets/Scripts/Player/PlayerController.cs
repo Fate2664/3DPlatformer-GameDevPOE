@@ -10,10 +10,12 @@ namespace Platformer
 
         [Header("References")] [SerializeField]
         private Camera playerCamera;
+
         [SerializeField] private Transform playerRoot;
 
         [Header("Movement Settings")] [SerializeField]
-        private float moveSpeed = 6.0f;
+        private float walkSpeed = 6.0f;
+
         [SerializeField] private float groundLinearDamping = 6f;
         [SerializeField] private float walkAcceleration = 0.15f;
         [SerializeField] private float slopeLimit = 45f;
@@ -35,11 +37,13 @@ namespace Platformer
 
         [Space(10)] [Header("Camera Settings")] [SerializeField]
         private float lookSenseH = 0.1f;
+
         [SerializeField] private float lookSenseV = 0.1f;
         [SerializeField] private float lookLimitV = 70f;
 
         [Space(10)] [Header("Environmental Details")] [SerializeField]
         private LayerMask groundLayer;
+
         [SerializeField] private float groundDistance = 0.5f;
         [SerializeField] private LayerMask climbableLayer;
 
@@ -49,6 +53,7 @@ namespace Platformer
         private Rigidbody rb;
         private CapsuleCollider col;
 
+        private Vector3 moveDirection;
         private float targetYaw;
         private float targetPitch;
         private float movingThreshold = 0.01f;
@@ -57,10 +62,10 @@ namespace Platformer
         private float jumpCooldownTimer = 0f;
         private RaycastHit currentWallHit;
         private bool isClimbing;
+        private Vector3 groundedPlatformVelocity;
         private float ledgeProbeHeight = 1.2f;
         private float ledgeProbeForward = 0.45f;
         private float ledgeProbeDown = 2.0f;
-        private PlatformMover activePlatform;
 
         private PlayerMovementState lastMoveState = PlayerMovementState.Idling;
 
@@ -75,6 +80,7 @@ namespace Platformer
             rb = GetComponent<Rigidbody>();
             col = GetComponent<CapsuleCollider>();
             privStepOffset = stepOffset;
+            rb.freezeRotation = true;
         }
 
         private void Start()
@@ -91,9 +97,12 @@ namespace Platformer
 
         private void Update()
         {
+            moveDirection = GetCameraRelativeMoveDirection();
+
             if (input.JumpPressed)
                 jumpQueued = true;
 
+            UpdateMovementState();
             targetYaw += lookSenseH * input.LookInput.x;
             targetPitch = Mathf.Clamp(targetPitch - lookSenseV * input.LookInput.y, -lookLimitV, lookLimitV);
         }
@@ -103,18 +112,16 @@ namespace Platformer
             if (jumpCooldownTimer > 0f)
                 jumpCooldownTimer -= Time.fixedDeltaTime;
 
-            Vector3 moveDirection = GetCameraRelativeMoveDirection();
             UpdateClimbState(moveDirection);
-            UpdateMovementState();
-
             bool isGrounded = IsGrounded();
+            UpdateGroundedPlatformVelocity(isGrounded);
             rb.linearDamping = isClimbing ? 0f : isGrounded ? groundLinearDamping : inAirLinearDamping;
 
 
             if (isClimbing)
                 HandleClimbMovement();
             else
-                HandleHorizontalMovement(moveDirection, isGrounded);
+                HandleMovement(isGrounded);
 
             HandleJump(isGrounded);
             jumpQueued = false;
@@ -211,11 +218,11 @@ namespace Platformer
 
         private Vector3 GetCameraRelativeMoveDirection()
         {
-            Vector3 cameraForwardXZ = new Vector3(playerCamera.transform.forward.x, 0, playerCamera.transform.forward.z)
-                .normalized;
-            Vector3 cameraRightXZ = new Vector3(playerCamera.transform.right.x, 0, playerCamera.transform.right.z)
-                .normalized;
-            return cameraRightXZ * input.MovementInput.x + cameraForwardXZ * input.MovementInput.y;
+            Quaternion yawRotation = Quaternion.Euler(0f, targetYaw, 0f);
+            Vector3 forward = yawRotation * Vector3.forward;
+            Vector3 right = yawRotation * Vector3.right;
+            
+            return Vector3.ClampMagnitude(right * input.MovementInput.x + forward * input.MovementInput.y, 1f);
         }
 
         private Vector3 GetLookForwardXZ()
@@ -225,29 +232,36 @@ namespace Platformer
             return forward.sqrMagnitude > 0.001f ? forward.normalized : Vector3.forward;
         }
 
-        void HandleHorizontalMovement(Vector3 moveDirection, bool isGrounded)
+        private void HandleMovement(bool isGrounded)
+        {
+            HandleHorizontalMovement(moveDirection, isGrounded);
+        }
+
+        void HandleHorizontalMovement(Vector3 adjustedDirection, bool isGrounded)
         {
             bool isSprinting = playerState.CurrentPlayerMovementState == PlayerMovementState.Sprinting;
-            moveDirection = Vector3.ClampMagnitude(moveDirection, 1f);
 
             //Check Acceleration
             float horizontalAcceleration = !isGrounded ? inAirAcceleration :
                 isSprinting ? runAcceleration : walkAcceleration;
 
             //Check speed
-            float speed = !isGrounded ? runSpeed :
-                isSprinting ? runSpeed : moveSpeed;
+            float moveSpeed = !isGrounded ? runSpeed :
+                isSprinting ? runSpeed : walkSpeed;
 
-            Vector3 platformVelocity = activePlatform != null ? activePlatform.Velocity : Vector3.zero;
             Vector3 velocity = rb.linearVelocity;
-            Vector3 horizontalVelocity = new Vector3(velocity.x, 0f, velocity.z);
-            Vector3 targetVelocity = moveDirection * speed;
+            Vector3 platformHorizontalVelocity = isGrounded
+                ? new Vector3(groundedPlatformVelocity.x, 0f, groundedPlatformVelocity.z)
+                : Vector3.zero;
+            Vector3 horizontalVelocity = new Vector3(velocity.x, 0f, velocity.z) - platformHorizontalVelocity;
+            Vector3 targetVelocity = Vector3.ClampMagnitude(adjustedDirection, 1f) * moveSpeed;
 
             horizontalVelocity = Vector3.MoveTowards(horizontalVelocity, targetVelocity,
                 horizontalAcceleration * Time.fixedDeltaTime);
-            velocity.x = horizontalVelocity.x + platformVelocity.x;
-            velocity.z = horizontalVelocity.z + platformVelocity.z;
+            velocity.x = horizontalVelocity.x + platformHorizontalVelocity.x;
+            velocity.z = horizontalVelocity.z + platformHorizontalVelocity.z;
 
+            //Step check
             if (isGrounded &&
                 CharacterControllerUtils.TryGetStepOffset(col,
                     new Vector3(velocity.x, 0f, velocity.z) * Time.fixedDeltaTime, stepOffset, slopeLimit,
@@ -257,10 +271,16 @@ namespace Platformer
                 velocity.y = Mathf.Max(velocity.y, 0f);
             }
 
+            //Steep walls check
             if (!isGrounded)
                 velocity = HandleSteepWalls(velocity);
+            
+            //Final velocity
+            float verticalVelocity = rb.linearVelocity.y;
+            if (isGrounded && groundedPlatformVelocity.y > verticalVelocity)
+                verticalVelocity = groundedPlatformVelocity.y;
 
-            rb.linearVelocity = velocity;
+            rb.linearVelocity = new Vector3(velocity.x, verticalVelocity, velocity.z);
         }
 
         private void HandleJump(bool isGrounded)
@@ -268,11 +288,8 @@ namespace Platformer
             if (!jumpQueued || !isGrounded || jumpCooldownTimer > 0f)
                 return;
 
-            Vector3 platformVelocity = activePlatform != null ? activePlatform.Velocity : Vector3.zero;
             Vector3 velocity = rb.linearVelocity;
-            //velocity.x += platformVelocity.x / 2;
-            //velocity.z += platformVelocity.z / 2;
-            velocity.y = 0f;
+            velocity.y = Mathf.Max(0f, groundedPlatformVelocity.y);
             rb.linearVelocity = velocity;
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
@@ -385,6 +402,18 @@ namespace Platformer
             return TryGetGroundHit(out _);
         }
 
+        private void UpdateGroundedPlatformVelocity(bool isGrounded)
+        {
+            if (!isGrounded || !TryGetGroundHit(out RaycastHit hit))
+            {
+                groundedPlatformVelocity = Vector3.zero;
+                return;
+            }
+
+            PlatformMover platformMover = hit.collider.GetComponentInParent<PlatformMover>();
+            groundedPlatformVelocity = platformMover != null ? platformMover.Velocity : Vector3.zero;
+        }
+
         private bool TryGetGroundHit(out RaycastHit hit)
         {
             Vector3 center = transform.TransformPoint(col.center);
@@ -404,11 +433,6 @@ namespace Platformer
         }
 
         #endregion
-
-        public void SetMovingPlatform(PlatformMover platform)
-        {
-            activePlatform = platform;
-        }
 
         private void OnDrawGizmosSelected()
         {
