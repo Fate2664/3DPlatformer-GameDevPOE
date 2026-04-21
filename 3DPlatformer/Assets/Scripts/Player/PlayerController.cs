@@ -6,68 +6,66 @@ namespace Platformer
 {
     public class PlayerController : MonoBehaviour, IRespawnable
     {
-        #region Class Variables
+        #region Serialized Class Variables
 
-        [Header("References")] [SerializeField]
-        private Camera playerCamera;
-
+        [Header("References")] 
+        [SerializeField] private Camera playerCamera;
         [SerializeField] private Transform playerRoot;
 
-        [Header("Movement Settings")] [SerializeField]
-        private float walkSpeed = 6.0f;
-
+        [Header("Movement Settings")] 
+        [SerializeField] private float walkSpeed = 6.0f;
         [SerializeField] private float groundLinearDamping = 6f;
         [SerializeField] private float walkAcceleration = 0.15f;
         [SerializeField] private float slopeLimit = 45f;
         [SerializeField] private float stepOffset = 0.03f;
-        [Space(10)] [SerializeField] private float runSpeed = 12f;
+        [Space(10)] 
+        [SerializeField] private float runSpeed = 12f;
         [SerializeField] private float runAcceleration = 0.25f;
-        [Space(10)] [SerializeField] private float jumpForce = 1.0f;
+        [Space(10)] 
+        [SerializeField] private float jumpForce = 1.0f;
         [SerializeField] private float inAirAcceleration = 0.15f;
         [SerializeField] private float jumpCooldown = 0.5f;
         [SerializeField] private float inAirLinearDamping = 0f;
 
-        [Space(10)] [Header("Climbing Settings")] [SerializeField]
-        private float climbSpeed = 15f;
-
+        [Space(10)] 
+        [Header("Climbing Settings")] 
+        [SerializeField] private float climbSpeed = 15f;
         [SerializeField] private float climbCheckDistance = 0.3f;
         [SerializeField] private float maxClimbAngle = 90f;
         [SerializeField] private float ledgeSnapForward = 0.35f;
         [SerializeField] private float ledgeSnapUp = 0.08f;
 
-        [Space(10)] [Header("Camera Settings")] [SerializeField]
-        private float lookSenseH = 0.1f;
-
+        [Space(10)] 
+        [Header("Camera Settings")] 
+        [SerializeField] private float lookSenseH = 0.1f;
         [SerializeField] private float lookSenseV = 0.1f;
         [SerializeField] private float lookLimitV = 70f;
 
-        [Space(10)] [Header("Environmental Details")] [SerializeField]
-        private LayerMask groundLayer;
-
+        [Space(10)] 
+        [Header("Environmental Details")] 
+        [SerializeField] private LayerMask groundLayer;
         [SerializeField] private float groundDistance = 0.5f;
         [SerializeField] private LayerMask climbableLayer;
 
-
+        #endregion
+        
+        #region Private Variables
         private InputReader input;
         private PlayerState playerState;
         private Rigidbody rb;
         private CapsuleCollider col;
+        private Animator animator;
+        private StateMachine stateMachine;
 
         private Vector3 moveDirection;
         private float targetYaw;
         private float targetPitch;
-        private float movingThreshold = 0.01f;
         private bool jumpQueued;
         private float privStepOffset;
         private float jumpCooldownTimer = 0f;
         private RaycastHit currentWallHit;
+        //TODO move isClimbing logic to PlayerState logic
         private bool isClimbing;
-        private Vector3 groundedPlatformVelocity;
-        private float ledgeProbeHeight = 1.2f;
-        private float ledgeProbeForward = 0.45f;
-        private float ledgeProbeDown = 2.0f;
-
-        private PlayerMovementState lastMoveState = PlayerMovementState.Idling;
 
         #endregion
 
@@ -79,9 +77,33 @@ namespace Platformer
             playerState = GetComponentInChildren<PlayerState>();
             rb = GetComponent<Rigidbody>();
             col = GetComponent<CapsuleCollider>();
+            animator = GetComponentInChildren<Animator>();
             privStepOffset = stepOffset;
             rb.freezeRotation = true;
+
+            //State Machine
+            stateMachine = new StateMachine();
+
+            //Declare States
+            var locomotionState = new LocomotionState(this, animator);
+            var jumpState = new JumpState(this, animator);
+            var fallState = new FallingState(this, animator);
+
+            //Define transitions
+            At(locomotionState, jumpState,
+                new FuncPredicate(() => playerState.CurrentPlayerMovementState == PlayerMovementState.Jumping));
+            At(jumpState, fallState,
+                new FuncPredicate(() => playerState.CurrentPlayerMovementState == PlayerMovementState.Falling));
+            At(fallState, locomotionState, new FuncPredicate(IsGrounded));
+
+            //Set initial state 
+            stateMachine.SetState(locomotionState);
         }
+
+        private void At(IState from, IState to, IPredicate condition) =>
+            stateMachine.AddTransition(from, to, condition);
+
+        private void Any(IState to, IPredicate condition) => stateMachine.AddAnyTransition(to, condition);
 
         private void Start()
         {
@@ -99,6 +121,8 @@ namespace Platformer
         {
             moveDirection = GetCameraRelativeMoveDirection();
 
+            stateMachine.Update();
+
             if (input.JumpPressed)
                 jumpQueued = true;
 
@@ -112,18 +136,18 @@ namespace Platformer
             if (jumpCooldownTimer > 0f)
                 jumpCooldownTimer -= Time.fixedDeltaTime;
 
+            stateMachine.FixedUpdate();
+
             UpdateClimbState(moveDirection);
-            bool isGrounded = IsGrounded();
-            UpdateGroundedPlatformVelocity(isGrounded);
-            rb.linearDamping = isClimbing ? 0f : isGrounded ? groundLinearDamping : inAirLinearDamping;
+            rb.linearDamping = isClimbing ? 0f : IsGrounded() ? groundLinearDamping : inAirLinearDamping;
 
 
-            if (isClimbing)
-                HandleClimbMovement();
-            else
-                HandleMovement(isGrounded);
+            // if (isClimbing)
+            //     HandleClimbMovement();
+            // else
+            //     HandleMovement(isGrounded);
 
-            HandleJump(isGrounded);
+            // HandleJump(isGrounded);
             jumpQueued = false;
         }
 
@@ -139,8 +163,6 @@ namespace Platformer
 
         private void UpdateMovementState()
         {
-            lastMoveState = playerState.CurrentPlayerMovementState;
-
             if (isClimbing)
             {
                 playerState.SetPlayerMovementState(PlayerMovementState.Climbing);
@@ -207,7 +229,6 @@ namespace Platformer
             rb.angularVelocity = Vector3.zero;
             jumpCooldownTimer = 0f;
             isClimbing = false;
-            lastMoveState = PlayerMovementState.Idling;
             stepOffset = privStepOffset;
             playerState.SetPlayerMovementState(PlayerMovementState.Idling);
         }
@@ -221,7 +242,7 @@ namespace Platformer
             Quaternion yawRotation = Quaternion.Euler(0f, targetYaw, 0f);
             Vector3 forward = yawRotation * Vector3.forward;
             Vector3 right = yawRotation * Vector3.right;
-            
+
             return Vector3.ClampMagnitude(right * input.MovementInput.x + forward * input.MovementInput.y, 1f);
         }
 
@@ -232,9 +253,9 @@ namespace Platformer
             return forward.sqrMagnitude > 0.001f ? forward.normalized : Vector3.forward;
         }
 
-        private void HandleMovement(bool isGrounded)
+        public void HandleMovement()
         {
-            HandleHorizontalMovement(moveDirection, isGrounded);
+            HandleHorizontalMovement(moveDirection, IsGrounded());
         }
 
         void HandleHorizontalMovement(Vector3 adjustedDirection, bool isGrounded)
@@ -250,16 +271,13 @@ namespace Platformer
                 isSprinting ? runSpeed : walkSpeed;
 
             Vector3 velocity = rb.linearVelocity;
-            Vector3 platformHorizontalVelocity = isGrounded
-                ? new Vector3(groundedPlatformVelocity.x, 0f, groundedPlatformVelocity.z)
-                : Vector3.zero;
-            Vector3 horizontalVelocity = new Vector3(velocity.x, 0f, velocity.z) - platformHorizontalVelocity;
+            Vector3 horizontalVelocity = new Vector3(velocity.x, 0f, velocity.z);
             Vector3 targetVelocity = Vector3.ClampMagnitude(adjustedDirection, 1f) * moveSpeed;
 
             horizontalVelocity = Vector3.MoveTowards(horizontalVelocity, targetVelocity,
                 horizontalAcceleration * Time.fixedDeltaTime);
-            velocity.x = horizontalVelocity.x + platformHorizontalVelocity.x;
-            velocity.z = horizontalVelocity.z + platformHorizontalVelocity.z;
+            velocity.x = horizontalVelocity.x;
+            velocity.z = horizontalVelocity.z;
 
             //Step check
             if (isGrounded &&
@@ -274,22 +292,17 @@ namespace Platformer
             //Steep walls check
             if (!isGrounded)
                 velocity = HandleSteepWalls(velocity);
-            
-            //Final velocity
-            float verticalVelocity = rb.linearVelocity.y;
-            if (isGrounded && groundedPlatformVelocity.y > verticalVelocity)
-                verticalVelocity = groundedPlatformVelocity.y;
 
-            rb.linearVelocity = new Vector3(velocity.x, verticalVelocity, velocity.z);
+            //Final velocity
+            rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
         }
 
-        private void HandleJump(bool isGrounded)
+        public void HandleJump()
         {
-            if (!jumpQueued || !isGrounded || jumpCooldownTimer > 0f)
+            if (!jumpQueued || !IsGrounded() || jumpCooldownTimer > 0f)
                 return;
 
             Vector3 velocity = rb.linearVelocity;
-            velocity.y = Mathf.Max(0f, groundedPlatformVelocity.y);
             rb.linearVelocity = velocity;
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
@@ -326,6 +339,9 @@ namespace Platformer
 
         private bool TryMoveOffWall()
         {
+            float ledgeProbeHeight = 1.2f;
+            float ledgeProbeForward = 0.45f;
+            float ledgeProbeDown = 2.0f;
             Vector3 wallNormal = currentWallHit.normal;
             if (wallNormal == Vector3.zero)
                 return false;
@@ -351,7 +367,7 @@ namespace Platformer
             return true;
         }
 
-        private void HandleClimbMovement()
+        public void HandleClimbMovement()
         {
             Vector3 wallNormal = currentWallHit.normal;
             Vector3 wallUp = Vector3.ProjectOnPlane(Vector3.up, wallNormal).normalized;
@@ -394,24 +410,12 @@ namespace Platformer
         {
             Vector3 horizontalVelocity =
                 new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-            return horizontalVelocity.magnitude > movingThreshold;
+            return horizontalVelocity.magnitude > 0.01f;
         }
 
-        private bool IsGrounded()
+        public bool IsGrounded()
         {
             return TryGetGroundHit(out _);
-        }
-
-        private void UpdateGroundedPlatformVelocity(bool isGrounded)
-        {
-            if (!isGrounded || !TryGetGroundHit(out RaycastHit hit))
-            {
-                groundedPlatformVelocity = Vector3.zero;
-                return;
-            }
-
-            PlatformMover platformMover = hit.collider.GetComponentInParent<PlatformMover>();
-            groundedPlatformVelocity = platformMover != null ? platformMover.Velocity : Vector3.zero;
         }
 
         private bool TryGetGroundHit(out RaycastHit hit)
@@ -433,17 +437,5 @@ namespace Platformer
         }
 
         #endregion
-
-        private void OnDrawGizmosSelected()
-        {
-            CapsuleCollider cc = GetComponent<CapsuleCollider>();
-            if (cc == null) return;
-            Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - cc.radius + 0.1f,
-                transform.position.z);
-            bool grounded = Physics.CheckSphere(spherePosition, cc.radius, groundLayer, QueryTriggerInteraction.Ignore);
-
-            Gizmos.color = grounded ? Color.green : Color.red;
-            Gizmos.DrawWireSphere(spherePosition, cc.radius);
-        }
     }
 }
