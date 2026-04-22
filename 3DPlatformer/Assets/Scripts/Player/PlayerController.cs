@@ -50,6 +50,7 @@ namespace Platformer
         #endregion
         
         #region Private Variables
+        
         private InputReader input;
         private PlayerState playerState;
         private Rigidbody rb;
@@ -90,19 +91,15 @@ namespace Platformer
             var fallState = new FallingState(this, animator);
 
             //Define transitions
-            At(locomotionState, jumpState,
-                new FuncPredicate(() => playerState.CurrentPlayerMovementState == PlayerMovementState.Jumping));
-            At(jumpState, fallState,
-                new FuncPredicate(() => playerState.CurrentPlayerMovementState == PlayerMovementState.Falling));
+            At(locomotionState, jumpState, new FuncPredicate(() => playerState.CurrentPlayerMovementState == PlayerMovementState.Jumping));
+            At(jumpState, fallState, new FuncPredicate(() => playerState.CurrentPlayerMovementState == PlayerMovementState.Falling));
             At(fallState, locomotionState, new FuncPredicate(IsGrounded));
 
             //Set initial state 
             stateMachine.SetState(locomotionState);
         }
 
-        private void At(IState from, IState to, IPredicate condition) =>
-            stateMachine.AddTransition(from, to, condition);
-
+        private void At(IState from, IState to, IPredicate condition) => stateMachine.AddTransition(from, to, condition);
         private void Any(IState to, IPredicate condition) => stateMachine.AddAnyTransition(to, condition);
 
         private void Start()
@@ -142,12 +139,12 @@ namespace Platformer
             rb.linearDamping = isClimbing ? 0f : IsGrounded() ? groundLinearDamping : inAirLinearDamping;
 
 
-            // if (isClimbing)
-            //     HandleClimbMovement();
-            // else
-            //     HandleMovement(isGrounded);
+                // if (isClimbing)
+                //     HandleClimbMovement();
+                // else
+                //     HandleMovement(isGrounded);
 
-            // HandleJump(isGrounded);
+                // HandleJump(isGrounded);
             jumpQueued = false;
         }
 
@@ -203,7 +200,7 @@ namespace Platformer
             bool isPressingIntoWall =
                 moveDir.sqrMagnitude > 0.001f && Vector3.Dot(moveDir.normalized, GetLookForwardXZ()) > 0f;
 
-            if (isPressingIntoWall && TryGetClimbWall(moveDir, out RaycastHit wallHit))
+            if (isPressingIntoWall && CharacterControllerUtils.TryGetClimbWall(col , moveDir, out RaycastHit wallHit, GetLookForwardXZ(), climbCheckDistance, climbableLayer, slopeLimit, maxClimbAngle))
             {
                 isClimbing = true;
                 currentWallHit = wallHit;
@@ -211,7 +208,7 @@ namespace Platformer
                 return;
             }
 
-            if (isClimbing && TryMoveOffWall())
+            if (isClimbing && CharacterControllerUtils.TryMoveOffWall(currentWallHit, transform, col, groundLayer, climbableLayer, slopeLimit, ledgeSnapUp, ledgeSnapForward))
             {
                 isClimbing = false;
                 stepOffset = privStepOffset;
@@ -311,7 +308,7 @@ namespace Platformer
 
         private Vector3 HandleSteepWalls(Vector3 velocity)
         {
-            if (!TryGetGroundHit(out RaycastHit hit))
+            if (!CharacterControllerUtils.TryGetGroundHit(out RaycastHit hit, transform, col, groundLayer,  climbableLayer, slopeLimit, groundDistance))
                 return velocity;
 
             float angle = Vector3.Angle(hit.normal, Vector3.up);
@@ -324,48 +321,6 @@ namespace Platformer
         #endregion
 
         #region Climbing
-
-        private bool TryGetClimbWall(Vector3 moveDir, out RaycastHit hit)
-        {
-            Vector3 probeDir = moveDir.sqrMagnitude > 0.001f ? moveDir.normalized : GetLookForwardXZ();
-
-            if (!CharacterControllerUtils.CheckWallHit(col, probeDir, climbCheckDistance,
-                    climbableLayer, out hit))
-                return false;
-
-            float angle = Vector3.Angle(hit.normal, Vector3.up);
-            return angle > slopeLimit + 1f && angle <= maxClimbAngle;
-        }
-
-        private bool TryMoveOffWall()
-        {
-            float ledgeProbeHeight = 1.2f;
-            float ledgeProbeForward = 0.45f;
-            float ledgeProbeDown = 2.0f;
-            Vector3 wallNormal = currentWallHit.normal;
-            if (wallNormal == Vector3.zero)
-                return false;
-
-            Vector3 center = transform.TransformPoint(col.center);
-
-            //Probe from above the player and slightly over the ledge
-            Vector3 probeOrigin = center + Vector3.up * ledgeProbeHeight - wallNormal * ledgeProbeForward;
-
-            if (!Physics.Raycast(probeOrigin, Vector3.down, out RaycastHit topHit, ledgeProbeDown,
-                    groundLayer | climbableLayer, QueryTriggerInteraction.Ignore))
-                return false;
-
-            float topAngle = Vector3.Angle(topHit.normal, Vector3.up);
-            if (topAngle > slopeLimit)
-                return false;
-
-            Vector3 targetCenter =
-                topHit.point + Vector3.up * ledgeSnapUp - wallNormal * ledgeSnapForward;
-
-            transform.position = targetCenter;
-
-            return true;
-        }
 
         public void HandleClimbMovement()
         {
@@ -413,27 +368,9 @@ namespace Platformer
             return horizontalVelocity.magnitude > 0.01f;
         }
 
-        public bool IsGrounded()
+        private bool IsGrounded()
         {
-            return TryGetGroundHit(out _);
-        }
-
-        private bool TryGetGroundHit(out RaycastHit hit)
-        {
-            Vector3 center = transform.TransformPoint(col.center);
-            float halfSegment = Mathf.Max(0f, (col.height * 0.5f) - col.radius);
-            Vector3 bottomSphereCenter = center - Vector3.up * halfSegment;
-
-            const float skin = 0.02f;
-            float castDistance = groundDistance + skin;
-
-            if (!Physics.SphereCast(bottomSphereCenter + Vector3.up * skin, col.radius * 0.95f, Vector3.down, out hit,
-                    castDistance, groundLayer | climbableLayer, QueryTriggerInteraction.Ignore))
-                return false;
-
-
-            float angle = Vector3.Angle(hit.normal, Vector3.up);
-            return angle <= slopeLimit;
+            return CharacterControllerUtils.TryGetGroundHit(out _, transform, col, groundLayer,  climbableLayer, slopeLimit, groundDistance);
         }
 
         #endregion

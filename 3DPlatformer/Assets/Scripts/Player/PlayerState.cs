@@ -9,8 +9,7 @@ namespace Platformer
         Sprinting = 2,
         Jumping = 3,
         Falling = 4,
-        Strafing = 5,
-        Climbing = 6
+        Climbing = 5
     }
     
     public class PlayerState : MonoBehaviour
