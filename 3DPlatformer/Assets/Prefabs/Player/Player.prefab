@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 1362955229159872499}
   - component: {fileID: 9187322104188533136}
   - component: {fileID: 4246120941415785118}
-  - component: {fileID: 5978174229193999102}
   - component: {fileID: 8664504747575506722}
   - component: {fileID: 3896616583009280813}
   - component: {fileID: 5664247581256510909}
@@ -69,7 +68,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.PlayerController
   playerCamera: {fileID: 8655329600016252622}
   playerRoot: {fileID: 9028926400847710836}
-  moveSpeed: 20
+  walkSpeed: 6
   groundLinearDamping: 20
   walkAcceleration: 100
   slopeLimit: 45
@@ -122,18 +121,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.PlayerAnimation
   animator: {fileID: 3147202973051998222}
   locomotionBlendSpeed: 8
---- !u!114 &5978174229193999102
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1060405343190849384}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a412f2b625ca44a49a67d59f8e31d3ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Platformer.PlatformCollisionHandler
 --- !u!54 &8664504747575506722
 Rigidbody:
   m_ObjectHideFlags: 0

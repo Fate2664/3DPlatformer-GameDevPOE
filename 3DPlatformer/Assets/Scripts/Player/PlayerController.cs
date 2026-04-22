@@ -81,6 +81,9 @@ namespace Platformer
             animator = GetComponentInChildren<Animator>();
             privStepOffset = stepOffset;
             rb.freezeRotation = true;
+            animator.updateMode = rb.interpolation == RigidbodyInterpolation.None
+                ? AnimatorUpdateMode.Fixed
+                : AnimatorUpdateMode.Normal;
 
             //State Machine
             stateMachine = new StateMachine();
@@ -91,9 +94,11 @@ namespace Platformer
             var fallState = new FallingState(this, animator);
 
             //Define transitions
-            At(locomotionState, jumpState, new FuncPredicate(() => playerState.CurrentPlayerMovementState == PlayerMovementState.Jumping));
+            Any(jumpState, new FuncPredicate(() => playerState.CurrentPlayerMovementState == PlayerMovementState.Jumping));
+            Any(fallState, new FuncPredicate(() => playerState.CurrentPlayerMovementState == PlayerMovementState.Falling));
             At(jumpState, fallState, new FuncPredicate(() => playerState.CurrentPlayerMovementState == PlayerMovementState.Falling));
-            At(fallState, locomotionState, new FuncPredicate(IsGrounded));
+            At(jumpState, locomotionState, new FuncPredicate(() => playerState.IsGroundedState()));
+            At(fallState, locomotionState, new FuncPredicate(() => playerState.IsGroundedState()));
 
             //Set initial state 
             stateMachine.SetState(locomotionState);
@@ -117,13 +122,14 @@ namespace Platformer
         private void Update()
         {
             moveDirection = GetCameraRelativeMoveDirection();
-
-            stateMachine.Update();
+            rb.linearDamping = isClimbing ? 0f : IsGrounded() ? groundLinearDamping : inAirLinearDamping;
 
             if (input.JumpPressed)
                 jumpQueued = true;
 
             UpdateMovementState();
+            stateMachine.Update();
+            
             targetYaw += lookSenseH * input.LookInput.x;
             targetPitch = Mathf.Clamp(targetPitch - lookSenseV * input.LookInput.y, -lookLimitV, lookLimitV);
         }
@@ -136,7 +142,6 @@ namespace Platformer
             stateMachine.FixedUpdate();
 
             UpdateClimbState(moveDirection);
-            rb.linearDamping = isClimbing ? 0f : IsGrounded() ? groundLinearDamping : inAirLinearDamping;
 
 
                 // if (isClimbing)
@@ -270,7 +275,7 @@ namespace Platformer
             Vector3 velocity = rb.linearVelocity;
             Vector3 horizontalVelocity = new Vector3(velocity.x, 0f, velocity.z);
             Vector3 targetVelocity = Vector3.ClampMagnitude(adjustedDirection, 1f) * moveSpeed;
-
+            
             horizontalVelocity = Vector3.MoveTowards(horizontalVelocity, targetVelocity,
                 horizontalAcceleration * Time.fixedDeltaTime);
             velocity.x = horizontalVelocity.x;
@@ -289,7 +294,7 @@ namespace Platformer
             //Steep walls check
             if (!isGrounded)
                 velocity = HandleSteepWalls(velocity);
-
+            
             //Final velocity
             rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
         }
@@ -371,6 +376,11 @@ namespace Platformer
         private bool IsGrounded()
         {
             return CharacterControllerUtils.TryGetGroundHit(out _, transform, col, groundLayer,  climbableLayer, slopeLimit, groundDistance);
+        }
+
+        private bool IsOnMovingPlatform()
+        {
+            return transform.parent != null && transform.parent.CompareTag("MovingPlatform");
         }
 
         #endregion

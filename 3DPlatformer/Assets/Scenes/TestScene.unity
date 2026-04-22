@@ -4249,8 +4249,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 297698820}
     - target: {fileID: 1362955229159872499, guid: 14bcb7012ca80bc478cfa9adc3296543, type: 3}
+      propertyPath: stepOffset
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1362955229159872499, guid: 14bcb7012ca80bc478cfa9adc3296543, type: 3}
       propertyPath: rotationSpeed
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1362955229159872499, guid: 14bcb7012ca80bc478cfa9adc3296543, type: 3}
+      propertyPath: groundDistance
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 1362955229159872499, guid: 14bcb7012ca80bc478cfa9adc3296543, type: 3}
       propertyPath: runAcceleration
@@ -4321,10 +4329,15 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8664504747575506722, guid: 14bcb7012ca80bc478cfa9adc3296543, type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
+      propertyPath: m_AngularDamping
+      value: 0.05
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8664504747575506722, guid: 14bcb7012ca80bc478cfa9adc3296543, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 0}
     m_RemovedGameObjects:
     - {fileID: 8504731331213447374, guid: 14bcb7012ca80bc478cfa9adc3296543, type: 3}
     m_AddedGameObjects:
