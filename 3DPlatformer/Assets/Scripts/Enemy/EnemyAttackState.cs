@@ -3,12 +3,12 @@ using UnityEngine.AI;
 
 namespace Platformer
 {
-    public class EnemyChaseState : EnemyBaseState
+    public class EnemyAttackState : EnemyBaseState
     {
         private readonly NavMeshAgent agent;
         private readonly Transform player;
 
-        public EnemyChaseState(Enemy enemy, Animator animator, NavMeshAgent agent, Transform player) : base(enemy, animator)
+        public EnemyAttackState(Enemy enemy, Animator animator, NavMeshAgent agent, Transform player) : base(enemy, animator)
         {
             this.agent = agent;
             this.player = player;
@@ -16,18 +16,13 @@ namespace Platformer
 
         public override void OnEnter()
         {
-            animator.CrossFade(runHash, crossFadeDuration);
-            agent.speed += 2;
+            animator.CrossFade(attackHash, crossFadeDuration);
         }
 
         public override void Update()
         {
             agent.SetDestination(player.position);
-        }
-
-        public override void OnExit()
-        {
-            agent.speed -= 2;
+            enemy.Attack();
         }
     }
 }
