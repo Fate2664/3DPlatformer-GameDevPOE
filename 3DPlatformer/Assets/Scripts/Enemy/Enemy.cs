@@ -1,12 +1,13 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace Platformer
 {
-    public class Enemy : MonoBehaviour
+    public class Enemy : Entity
     {
-        [SerializeField] private float wanderRadius = 5f;
+        [SerializeField] private Transform[] wanderPointsTransforms;
         [SerializeField] private float timeBetweenAttacks = 1f;
         
         private NavMeshAgent agent;
@@ -14,6 +15,7 @@ namespace Platformer
         private StateMachine stateMachine;
         private PlayerDetector playerDetector;
         private CountDownTimer attackTimer;
+        private LinkedListBase<Transform> wanderPoints;
         
         private void Awake()
         {
@@ -22,11 +24,17 @@ namespace Platformer
             playerDetector = GetComponent<PlayerDetector>();
             stateMachine = new StateMachine();
             attackTimer = new CountDownTimer(timeBetweenAttacks);
+            wanderPoints = new LinkedListBase<Transform>();
+
+            foreach (Transform wanderPoint in wanderPointsTransforms)
+            {
+                wanderPoints.AddLast(new Node<Transform>(wanderPoint));
+            }
         }
 
         private void Start()
         {
-            var wanderState = new EnemyWanderState(this, animator, agent, wanderRadius);
+            var wanderState = new EnemyWanderState(this, animator, agent, wanderPoints);
             var chaseState = new EnemyChaseState(this, animator, agent, playerDetector.Player);
             var attackState = new EnemyAttackState(this, animator, agent, playerDetector.Player);
             

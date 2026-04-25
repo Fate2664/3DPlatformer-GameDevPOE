@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -6,32 +7,32 @@ namespace Platformer
     public class EnemyWanderState : EnemyBaseState
     {
         private readonly NavMeshAgent agent;
-        private readonly Vector3 startPoint;
-        private readonly float wanderRadius;
+        private readonly LinkedListBase<Transform> wanderPoints;
+        
+        private Node<Transform> currentPoint;
 
-        public EnemyWanderState(Enemy enemy, Animator animator, NavMeshAgent agent, float wanderRadius) : base(enemy, animator)
+        public EnemyWanderState(Enemy enemy, Animator animator, NavMeshAgent agent, LinkedListBase<Transform> wanderPoints) : base(enemy, animator)
         {
             this.agent = agent;
-            this.startPoint = enemy.transform.position;
-            this.wanderRadius = wanderRadius;
+            this.wanderPoints = wanderPoints;
         }
 
         public override void OnEnter()
         {
             animator.CrossFade(walkHash,  crossFadeDuration);
+            
+            currentPoint ??= wanderPoints.First;
+            agent.SetDestination(currentPoint.Data.position);
         }
 
         public override void Update()
         {
             if (HasReachedDestination())
             {
-                var randomDirection = Random.insideUnitSphere* wanderRadius;
-                randomDirection += startPoint;
-                NavMeshHit hit;
-                NavMesh.SamplePosition(randomDirection, out hit, wanderRadius, NavMesh.AllAreas);
-                var finalPosition = hit.position;
+                //If next point is null -> go back to the first point
+                currentPoint = currentPoint.Next ?? wanderPoints.First;
                 
-                agent.SetDestination(finalPosition);
+                agent.SetDestination(currentPoint.Data.position);
             }
         }
 
