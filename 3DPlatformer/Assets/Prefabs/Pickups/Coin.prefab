@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6198727221562804667}
   - component: {fileID: 3904515419403557855}
-  - component: {fileID: 2709817534224656361}
-  - component: {fileID: 7417935860761884991}
+  - component: {fileID: 1817492301817632273}
+  - component: {fileID: 7290148255804367395}
   m_Layer: 0
   m_Name: Coin
   m_TagString: Untagged
@@ -56,7 +56,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.52, y: 0.46, z: 0.11}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2709817534224656361
+--- !u!114 &1817492301817632273
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -65,11 +65,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1436152406341193980}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d1e051fa3e6a1e499dc4745b5abad9f, type: 3}
+  m_Script: {fileID: 11500000, guid: 2a0d2f7c017a4e47b8c4339d25860498, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Platformer.CoinPickup
-  scoreAmount: 1
---- !u!114 &7417935860761884991
+  m_EditorClassIdentifier: Assembly-CSharp::Platformer.Collectible
+--- !u!114 &7290148255804367395
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -78,9 +77,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1436152406341193980}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a9f092172c26814d802cf09f383abe0, type: 3}
+  m_Script: {fileID: 11500000, guid: 28728c1d4e4b44fb820c504d603c8645, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Platformer.Pickup
+  m_EditorClassIdentifier: Assembly-CSharp::Platformer.SpawnEffects
+  spawnVFX: {fileID: 0}
+  animationDuration: 1
 --- !u!1001 &926191391912785546
 PrefabInstance:
   m_ObjectHideFlags: 0
