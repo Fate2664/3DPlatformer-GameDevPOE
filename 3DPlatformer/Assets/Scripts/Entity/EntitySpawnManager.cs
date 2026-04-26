@@ -2,7 +2,7 @@
 
 namespace Platformer
 {
-    public abstract class EntitySpawneManager : MonoBehaviour
+    public abstract class EntitySpawnManager : MonoBehaviour
     {
         [SerializeField] protected SpawnPointStrategyType spawnPointStrategyType = SpawnPointStrategyType.Linear;
         [SerializeField] protected Transform[] spawnPoints;

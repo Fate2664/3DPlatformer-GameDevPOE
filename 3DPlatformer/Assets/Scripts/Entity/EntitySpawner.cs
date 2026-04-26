@@ -1,4 +1,6 @@
-﻿namespace Platformer
+﻿using UnityEngine;
+
+namespace Platformer
 {
     public class EntitySpawner<T> where T : Entity
     {
@@ -11,9 +13,10 @@
             this.spawnPointStrategy = spawnPointStrategy;
         }
 
-        public T Spawn()
+        public T Spawn(out Transform spawnPoint)    //Get a reference to the next spawn point
         {
-            return entityFactory.Create(spawnPointStrategy.NextSpawnPoint());
+            spawnPoint = spawnPointStrategy.NextSpawnPoint();
+            return entityFactory.Create(spawnPoint);
         }
     }
 }

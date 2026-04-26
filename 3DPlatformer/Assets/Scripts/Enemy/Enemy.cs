@@ -7,7 +7,6 @@ namespace Platformer
 {
     public class Enemy : Entity
     {
-        [SerializeField] private Transform[] wanderPointsTransforms;
         [SerializeField] private float timeBetweenAttacks = 1f;
         
         private NavMeshAgent agent;
@@ -24,12 +23,6 @@ namespace Platformer
             playerDetector = GetComponent<PlayerDetector>();
             stateMachine = new StateMachine();
             attackTimer = new CountDownTimer(timeBetweenAttacks);
-            wanderPoints = new LinkedListBase<Transform>();
-
-            foreach (Transform wanderPoint in wanderPointsTransforms)
-            {
-                wanderPoints.AddLast(new Node<Transform>(wanderPoint));
-            }
         }
 
         private void Start()
@@ -58,6 +51,15 @@ namespace Platformer
         private void FixedUpdate()
         {
             stateMachine.FixedUpdate(); 
+        }
+
+        public void SetWanderPath(Transform[] points)
+        {
+            wanderPoints = new LinkedListBase<Transform>();
+            foreach (Transform wanderPoint in points)
+            {
+                wanderPoints.AddLast(new Node<Transform>(wanderPoint));
+            }
         }
 
         public void Attack()

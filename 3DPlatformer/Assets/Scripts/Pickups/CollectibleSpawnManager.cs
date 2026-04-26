@@ -2,7 +2,7 @@
 
 namespace Platformer
 {
-    public class CollectibleSpawnManager : EntitySpawneManager
+    public class CollectibleSpawnManager : EntitySpawnManager
     {
         [SerializeField] private CollectibleData[] collectibleData;
         [SerializeField] private float spawnRate = 1f;
@@ -34,6 +34,6 @@ namespace Platformer
         void Start() => spawnTimer.Start();
         void Update() => spawnTimer.Tick(Time.deltaTime);
 
-        public override void Spawn() => spawner.Spawn();
+        public override void Spawn() => spawner.Spawn(out _);
     }
 }
