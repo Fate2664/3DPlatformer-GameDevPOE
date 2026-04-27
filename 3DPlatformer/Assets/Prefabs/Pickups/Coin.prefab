@@ -68,6 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a0d2f7c017a4e47b8c4339d25860498, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.Collectible
+  collectibleData: {fileID: 11400000, guid: d134bdd44c42a1640bb38a5dd4d2055c, type: 2}
 --- !u!114 &7290148255804367395
 MonoBehaviour:
   m_ObjectHideFlags: 0
