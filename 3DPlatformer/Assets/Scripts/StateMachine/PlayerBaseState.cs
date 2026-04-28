@@ -2,7 +2,17 @@ using UnityEngine;
 
 namespace Platformer
 {
-    public abstract class BaseState : IState
+    public enum PlayerMovementState
+    {
+        Idling = 0,
+        Walking = 1,
+        Sprinting = 2,
+        Jumping = 3,
+        Falling = 4,
+        Climbing = 5
+    }
+    
+    public abstract class PlayerBaseState : IState
     {
         protected readonly PlayerController player;
         protected readonly Animator animator;
@@ -13,7 +23,7 @@ namespace Platformer
         
         protected const float crossFadeDuration = 0.3f;
 
-        protected BaseState(PlayerController player, Animator animator)
+        protected PlayerBaseState(PlayerController player, Animator animator)
         {
             this.player = player;
             this.animator = animator;

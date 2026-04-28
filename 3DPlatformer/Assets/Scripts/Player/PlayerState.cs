@@ -2,16 +2,6 @@ using UnityEngine;
 
 namespace Platformer
 {
-    public enum PlayerMovementState
-    {
-        Idling = 0,
-        Walking = 1,
-        Sprinting = 2,
-        Jumping = 3,
-        Falling = 4,
-        Climbing = 5
-    }
-    
     public class PlayerState : MonoBehaviour
     {
         //This allows us to see in editor but not edit it

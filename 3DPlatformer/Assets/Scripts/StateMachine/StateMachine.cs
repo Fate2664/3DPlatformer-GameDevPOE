@@ -7,6 +7,8 @@ namespace Platformer
     public class StateMachine
     {
         private StateNode current;
+        public IState CurrentState => current?.State;
+        
         private Dictionary<Type, StateNode> nodes = new();
         private HashSet<ITransition> anyTransitions = new();
 

@@ -111,7 +111,7 @@ MonoBehaviour:
   detectionRadius: 8
   innerDetectionRadius: 3
   detectionCooldown: 1
-  attackRange: 2
+  attackRange: 1
 --- !u!114 &-6967143365766971658
 MonoBehaviour:
   m_ObjectHideFlags: 0

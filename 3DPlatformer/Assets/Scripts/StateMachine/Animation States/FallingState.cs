@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Platformer
 {
-    public class FallingState : BaseState
+    public class FallingState : PlayerBaseState
     {
         public FallingState(PlayerController player, Animator animator) : base(player, animator) { }
 

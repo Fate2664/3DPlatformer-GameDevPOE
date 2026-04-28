@@ -65,7 +65,12 @@ namespace Platformer
         public void Attack()
         {
             if (attackTimer.IsRunning) return;
-
+            if (playerDetector.CanAttackPlayer())
+            {
+                //Respawn player
+                Respawner respawner = playerDetector.Player.GetComponent<Respawner>();
+                respawner.RespawnPlayer();
+            }
             attackTimer.Start();
         }
     }

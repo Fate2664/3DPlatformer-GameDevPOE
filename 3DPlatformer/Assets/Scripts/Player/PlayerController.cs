@@ -57,7 +57,7 @@ namespace Platformer
         private CapsuleCollider col;
         private Animator animator;
         private StateMachine stateMachine;
-
+        
         private Vector3 moveDirection;
         private float targetYaw;
         private float targetPitch;
@@ -94,11 +94,10 @@ namespace Platformer
             var fallState = new FallingState(this, animator);
 
             //Define transitions
-            Any(jumpState, new FuncPredicate(() => playerState.CurrentPlayerMovementState == PlayerMovementState.Jumping));
-            Any(fallState, new FuncPredicate(() => playerState.CurrentPlayerMovementState == PlayerMovementState.Falling));
-            At(jumpState, fallState, new FuncPredicate(() => playerState.CurrentPlayerMovementState == PlayerMovementState.Falling));
-            At(jumpState, locomotionState, new FuncPredicate(() => playerState.IsGroundedState()));
-            At(fallState, locomotionState, new FuncPredicate(() => playerState.IsGroundedState()));
+            Any(jumpState, new FuncPredicate(ShouldEnterJumpState));
+            Any(fallState, new FuncPredicate(ShouldEnterFallState));
+            At(jumpState, locomotionState, new FuncPredicate(ShouldEnterLocomotionState)); //This should never really happen -> jump should always be followed by falling
+            At(fallState, locomotionState, new FuncPredicate(ShouldEnterLocomotionState));
 
             //Set initial state 
             stateMachine.SetState(locomotionState);
@@ -121,17 +120,17 @@ namespace Platformer
 
         private void Update()
         {
+            targetYaw += lookSenseH * input.LookInput.x;
+            targetPitch = Mathf.Clamp(targetPitch - lookSenseV * input.LookInput.y, -lookLimitV, lookLimitV);
+            
             moveDirection = GetCameraRelativeMoveDirection();
             rb.linearDamping = isClimbing ? 0f : IsGrounded() ? groundLinearDamping : inAirLinearDamping;
 
             if (input.JumpPressed)
                 jumpQueued = true;
 
-            UpdateMovementState();
             stateMachine.Update();
-            
-            targetYaw += lookSenseH * input.LookInput.x;
-            targetPitch = Mathf.Clamp(targetPitch - lookSenseV * input.LookInput.y, -lookLimitV, lookLimitV);
+            UpdateMovementState();
         }
 
         private void FixedUpdate()
@@ -139,10 +138,8 @@ namespace Platformer
             if (jumpCooldownTimer > 0f)
                 jumpCooldownTimer -= Time.fixedDeltaTime;
 
-            stateMachine.FixedUpdate();
-
             UpdateClimbState(moveDirection);
-
+            stateMachine.FixedUpdate();
 
                 // if (isClimbing)
                 //     HandleClimbMovement();
@@ -204,7 +201,7 @@ namespace Platformer
         {
             bool isPressingIntoWall =
                 moveDir.sqrMagnitude > 0.001f && Vector3.Dot(moveDir.normalized, GetLookForwardXZ()) > 0f;
-
+            
             if (isPressingIntoWall && CharacterControllerUtils.TryGetClimbWall(col , moveDir, out RaycastHit wallHit, GetLookForwardXZ(), climbCheckDistance, climbableLayer, slopeLimit, maxClimbAngle))
             {
                 isClimbing = true;
@@ -262,7 +259,7 @@ namespace Platformer
 
         void HandleHorizontalMovement(Vector3 adjustedDirection, bool isGrounded)
         {
-            bool isSprinting = playerState.CurrentPlayerMovementState == PlayerMovementState.Sprinting;
+            bool isSprinting = isGrounded && input.SprintToggledOn;
 
             //Check Acceleration
             float horizontalAcceleration = !isGrounded ? inAirAcceleration :
@@ -381,6 +378,21 @@ namespace Platformer
         private bool IsOnMovingPlatform()
         {
             return transform.parent != null && transform.parent.CompareTag("MovingPlatform");
+        }
+
+        private bool ShouldEnterJumpState()
+        {
+            return !isClimbing && !IsGrounded() && rb.linearVelocity.magnitude > 0f;
+        }
+
+        private bool ShouldEnterFallState()
+        {
+            return !isClimbing && !IsGrounded() && rb.linearVelocity.magnitude <= 0f;
+        }
+
+        private bool ShouldEnterLocomotionState()
+        {
+            return !isClimbing && IsGrounded();
         }
 
         #endregion

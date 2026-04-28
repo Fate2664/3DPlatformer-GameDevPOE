@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Platformer
 {
-    public class LocomotionState : BaseState
+    public class LocomotionState : PlayerBaseState
     {
         public LocomotionState(PlayerController player, Animator animator) : base(player, animator) { }
 

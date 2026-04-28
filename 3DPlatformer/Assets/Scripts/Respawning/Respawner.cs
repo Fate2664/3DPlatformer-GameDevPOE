@@ -5,16 +5,19 @@ namespace Platformer
 {
     public class Respawner : MonoBehaviour
     {
-        [SerializeField] private PlayerController playerController;
-        [SerializeField] private PlayerStats playerStats;
         [SerializeField] private Transform startRespawnPoint;
         
+        private PlayerController playerController; 
+        private PlayerStats playerStats;
         private CheckpointStack<RespawnPointData>  checkpointHistory = new ();
         private IRespawnable respawnable;
         private bool respawnQueued;
             
         private void Awake()
         {
+            playerController = GetComponent<PlayerController>();
+            playerStats = playerController.GetComponent<PlayerStats>();
+            
             respawnable = playerController as IRespawnable;
             if (startRespawnPoint != null)
             {
@@ -41,25 +44,18 @@ namespace Platformer
             respawnQueued = true;
         }
 
-        public void RevertToPreviousCheckpoint()
-        {
-            if (checkpointHistory.Count > 1)
-                checkpointHistory.Pop();
-
-            respawnQueued = true;
-        }
-
         private void HandleRespawn()
         {
             bool hasLivesRemaining = playerStats.Lives > 0;
-
+            
+            //Respawn back to the start if no lives remaining
             if (!hasLivesRemaining)
             {
                 ResetRunToStart();
                 return;
             }
             
-            
+            //Respawn to last checkpoint
             playerStats.DecrementLives();
             respawnable.RespawnAt(checkpointHistory.Peek());
         }

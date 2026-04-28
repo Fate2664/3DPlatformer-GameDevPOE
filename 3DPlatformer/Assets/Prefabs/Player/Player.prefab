@@ -17,6 +17,8 @@ GameObject:
   - component: {fileID: 3896616583009280813}
   - component: {fileID: 5664247581256510909}
   - component: {fileID: 6264744684180181924}
+  - component: {fileID: 8707190846045592874}
+  - component: {fileID: 13686182319539258}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -37,8 +39,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 9028926400847710836}
   - {fileID: 7289163295405922264}
+  - {fileID: 3124729701433798380}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3986204981851452314
@@ -67,14 +69,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.PlayerController
   playerCamera: {fileID: 8655329600016252622}
-  playerRoot: {fileID: 9028926400847710836}
-  walkSpeed: 6
+  playerRoot: {fileID: 3124729701433798380}
+  walkSpeed: 300
   groundLinearDamping: 20
   walkAcceleration: 100
   slopeLimit: 45
   stepOffset: 0.3
-  runSpeed: 40
-  runAcceleration: 150
+  runSpeed: 400
+  runAcceleration: 200
   jumpForce: 12
   inAirAcceleration: 2
   jumpCooldown: 0.8
@@ -90,7 +92,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 65
-  groundDistance: 0.08
+  groundDistance: 0.15
   climbableLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -119,7 +121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b46ee4f7d6612f0499d400feb74767b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.PlayerAnimation
-  animator: {fileID: 3147202973051998222}
+  animator: {fileID: 9060514363729720470}
   locomotionBlendSpeed: 8
 --- !u!54 &8664504747575506722
 Rigidbody:
@@ -145,9 +147,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 2
   m_Constraints: 80
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
 --- !u!136 &3896616583009280813
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -199,6 +201,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a412f2b625ca44a49a67d59f8e31d3ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.PlatformCollisionHandler
+--- !u!114 &8707190846045592874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1060405343190849384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0161d41e29655b44d9b5a3f650c15188, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platformer.PlayerStats
+  startingLives: 3
+  startingScore: 0
+  scoreText: {fileID: 0}
+  livesText: {fileID: 0}
+--- !u!114 &13686182319539258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1060405343190849384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc0877ab9c1ab564f99e34bbdc9bb63e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platformer.Respawner
+  startRespawnPoint: {fileID: 0}
 --- !u!1 &3335438140829548946
 GameObject:
   m_ObjectHideFlags: 0
@@ -643,7 +674,7 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
---- !u!1001 &2665692277945908461
+--- !u!1001 &8281561858944129141
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -944,13 +975,13 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bb96394e9629f20408ea23d3760ba123, type: 3}
---- !u!95 &3147202973051998222 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 1104346649488452835, guid: bb96394e9629f20408ea23d3760ba123, type: 3}
-  m_PrefabInstance: {fileID: 2665692277945908461}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &9028926400847710836 stripped
+--- !u!4 &3124729701433798380 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6463582156032259737, guid: bb96394e9629f20408ea23d3760ba123, type: 3}
-  m_PrefabInstance: {fileID: 2665692277945908461}
+  m_PrefabInstance: {fileID: 8281561858944129141}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &9060514363729720470 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1104346649488452835, guid: bb96394e9629f20408ea23d3760ba123, type: 3}
+  m_PrefabInstance: {fileID: 8281561858944129141}
   m_PrefabAsset: {fileID: 0}
