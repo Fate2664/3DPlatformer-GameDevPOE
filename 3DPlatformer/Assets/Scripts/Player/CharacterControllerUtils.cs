@@ -1,4 +1,3 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace Platformer
@@ -12,6 +11,8 @@ namespace Platformer
 
             Vector3 flatMove = Vector3.ProjectOnPlane(moveDelta, Vector3.up);
             float moveDistance = flatMove.magnitude;
+            if (moveDistance <= 0.001f) return false;
+            
             Vector3 moveDirection = flatMove / moveDistance;
             GetCapsuleData(col, out Vector3 top, out Vector3 bottom, out float radius);
 
@@ -27,7 +28,7 @@ namespace Platformer
             if (obstacleAngle <= slopeLimit)
                 return false;
 
-            float forwardDistance = Mathf.Max(obstacleHit.distance + skin, radius * 0.5f);
+            float forwardDistance = Mathf.Max(moveDistance + skin, obstacleHit.distance + (radius * 0.25f));
             Vector3 candidateOffset = moveDirection * forwardDistance + Vector3.up * (stepOffset + skin);
 
             if (Physics.CheckCapsule(top + candidateOffset, bottom + candidateOffset, castRadius, collisionMask,
@@ -44,7 +45,10 @@ namespace Platformer
                 return false;
 
             float verticalLift = candidateOffset.y - landingHit.distance;
-            stepDelta = moveDirection * forwardDistance + Vector3.up * verticalLift;
+            if (verticalLift <= 0)
+                return false;
+            
+            stepDelta = Vector3.up * verticalLift;
             return true;
         }
 

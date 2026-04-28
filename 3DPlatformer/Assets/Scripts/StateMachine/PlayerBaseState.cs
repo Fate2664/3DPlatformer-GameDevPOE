@@ -2,14 +2,11 @@ using UnityEngine;
 
 namespace Platformer
 {
-    public enum PlayerMovementState
+    public enum PlayerLocomotionState
     {
         Idling = 0,
         Walking = 1,
         Sprinting = 2,
-        Jumping = 3,
-        Falling = 4,
-        Climbing = 5
     }
     
     public abstract class PlayerBaseState : IState
@@ -20,6 +17,7 @@ namespace Platformer
         protected static readonly int LocomotionHash = Animator.StringToHash("Locomotion");
         protected static readonly int JumpHash = Animator.StringToHash("Jump");
         protected static readonly int FallingHash = Animator.StringToHash("Fall");
+        protected static readonly int ClimbingHash = Animator.StringToHash("Climbing");
         
         protected const float crossFadeDuration = 0.3f;
 

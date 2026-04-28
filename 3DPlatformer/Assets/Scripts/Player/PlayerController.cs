@@ -8,56 +8,60 @@ namespace Platformer
     {
         #region Serialized Class Variables
 
-        [Header("References")] 
-        [SerializeField] private Camera playerCamera;
+        [Header("References")] [SerializeField]
+        private Camera playerCamera;
+
         [SerializeField] private Transform playerRoot;
 
-        [Header("Movement Settings")] 
-        [SerializeField] private float walkSpeed = 6.0f;
+        [Header("Movement Settings")] [SerializeField]
+        private float walkSpeed = 6.0f;
+
         [SerializeField] private float groundLinearDamping = 6f;
         [SerializeField] private float walkAcceleration = 0.15f;
         [SerializeField] private float slopeLimit = 45f;
         [SerializeField] private float stepOffset = 0.03f;
-        [Space(10)] 
-        [SerializeField] private float runSpeed = 12f;
+        [SerializeField] private float stepUpSpeed = 2.5f; 
+        [Space(10)] [SerializeField] private float runSpeed = 12f;
         [SerializeField] private float runAcceleration = 0.25f;
-        [Space(10)] 
-        [SerializeField] private float jumpForce = 1.0f;
+        [Space(10)] [SerializeField] private float jumpForce = 1.0f;
         [SerializeField] private float inAirAcceleration = 0.15f;
         [SerializeField] private float jumpCooldown = 0.5f;
         [SerializeField] private float inAirLinearDamping = 0f;
 
-        [Space(10)] 
-        [Header("Climbing Settings")] 
-        [SerializeField] private float climbSpeed = 15f;
+        [Space(10)] [Header("Climbing Settings")] [SerializeField]
+        private float climbSpeed = 15f;
+
         [SerializeField] private float climbCheckDistance = 0.3f;
         [SerializeField] private float maxClimbAngle = 90f;
         [SerializeField] private float ledgeSnapForward = 0.35f;
         [SerializeField] private float ledgeSnapUp = 0.08f;
 
-        [Space(10)] 
-        [Header("Camera Settings")] 
-        [SerializeField] private float lookSenseH = 0.1f;
+        [Space(10)] [Header("Camera Settings")] [SerializeField]
+        private float lookSenseH = 0.1f;
+
         [SerializeField] private float lookSenseV = 0.1f;
         [SerializeField] private float lookLimitV = 70f;
 
-        [Space(10)] 
-        [Header("Environmental Details")] 
-        [SerializeField] private LayerMask groundLayer;
+        [Space(10)] [Header("Environmental Details")] [SerializeField]
+        private LayerMask groundLayer;
+
         [SerializeField] private float groundDistance = 0.5f;
         [SerializeField] private LayerMask climbableLayer;
 
+        //This allows us to see in editor but not edit it
+        [field: SerializeField]
+        public PlayerLocomotionState CurrentPlayerLocomotionState { get; private set; } = PlayerLocomotionState.Idling;
+
         #endregion
-        
+
         #region Private Variables
-        
+
         private InputReader input;
-        private PlayerState playerState;
         private Rigidbody rb;
         private CapsuleCollider col;
         private Animator animator;
         private StateMachine stateMachine;
-        
+
         private Vector3 moveDirection;
         private float targetYaw;
         private float targetPitch;
@@ -75,7 +79,6 @@ namespace Platformer
         private void Awake()
         {
             input = GetComponent<InputReader>();
-            playerState = GetComponentInChildren<PlayerState>();
             rb = GetComponent<Rigidbody>();
             col = GetComponent<CapsuleCollider>();
             animator = GetComponentInChildren<Animator>();
@@ -92,18 +95,23 @@ namespace Platformer
             var locomotionState = new LocomotionState(this, animator);
             var jumpState = new JumpState(this, animator);
             var fallState = new FallingState(this, animator);
-
+            var climbState = new ClimbingState(this, animator);
+            
             //Define transitions
             Any(jumpState, new FuncPredicate(ShouldEnterJumpState));
             Any(fallState, new FuncPredicate(ShouldEnterFallState));
+            Any(climbState, new FuncPredicate(ShouldEnterClimbState));
             At(jumpState, locomotionState, new FuncPredicate(ShouldEnterLocomotionState)); //This should never really happen -> jump should always be followed by falling
             At(fallState, locomotionState, new FuncPredicate(ShouldEnterLocomotionState));
+            At(climbState, locomotionState, new FuncPredicate(ShouldEnterLocomotionState));
+            At(climbState, fallState, new FuncPredicate(ShouldEnterFallState));
 
             //Set initial state 
             stateMachine.SetState(locomotionState);
         }
 
-        private void At(IState from, IState to, IPredicate condition) => stateMachine.AddTransition(from, to, condition);
+        private void At(IState from, IState to, IPredicate condition) =>
+            stateMachine.AddTransition(from, to, condition);
         private void Any(IState to, IPredicate condition) => stateMachine.AddAnyTransition(to, condition);
 
         private void Start()
@@ -122,7 +130,7 @@ namespace Platformer
         {
             targetYaw += lookSenseH * input.LookInput.x;
             targetPitch = Mathf.Clamp(targetPitch - lookSenseV * input.LookInput.y, -lookLimitV, lookLimitV);
-            
+
             moveDirection = GetCameraRelativeMoveDirection();
             rb.linearDamping = isClimbing ? 0f : IsGrounded() ? groundLinearDamping : inAirLinearDamping;
 
@@ -130,7 +138,7 @@ namespace Platformer
                 jumpQueued = true;
 
             stateMachine.Update();
-            UpdateMovementState();
+            UpdateLocomotionState();
         }
 
         private void FixedUpdate()
@@ -138,15 +146,9 @@ namespace Platformer
             if (jumpCooldownTimer > 0f)
                 jumpCooldownTimer -= Time.fixedDeltaTime;
 
-            UpdateClimbState(moveDirection);
+            CheckClimbingState(moveDirection);
             stateMachine.FixedUpdate();
-
-                // if (isClimbing)
-                //     HandleClimbMovement();
-                // else
-                //     HandleMovement(isGrounded);
-
-                // HandleJump(isGrounded);
+            
             jumpQueued = false;
         }
 
@@ -158,13 +160,17 @@ namespace Platformer
 
         #endregion
 
-        #region UpdateState Methods
-
-        private void UpdateMovementState()
+        #region Update State Methods
+        
+        public void SetPlayerLocomotionState(PlayerLocomotionState playerLocomotionState)
         {
-            if (isClimbing)
+            CurrentPlayerLocomotionState = playerLocomotionState;
+        }
+
+        private void UpdateLocomotionState()
+        {
+            if (isClimbing || stateMachine.IsInState<JumpState>() || stateMachine.IsInState<FallingState>())
             {
-                playerState.SetPlayerMovementState(PlayerMovementState.Climbing);
                 stepOffset = 0f;
                 return;
             }
@@ -172,54 +178,14 @@ namespace Platformer
             bool isMoving = input.MovementInput != Vector2.zero;
             bool isMovingHorizontally = IsMovingHorizontally();
             bool isSprinting = isMovingHorizontally && input.SprintToggledOn;
-            bool isGrounded = IsGrounded();
 
-            PlayerMovementState horizontalState = isSprinting
-                ? PlayerMovementState.Sprinting
+            SetPlayerLocomotionState(isSprinting
+                ? PlayerLocomotionState.Sprinting
                 : isMovingHorizontally || isMoving
-                    ? PlayerMovementState.Walking
-                    : PlayerMovementState.Idling;
-            playerState.SetPlayerMovementState(horizontalState);
-
-            if (!isGrounded && rb.linearVelocity.y > 0f)
-            {
-                playerState.SetPlayerMovementState(PlayerMovementState.Jumping);
-                stepOffset = 0f;
-            }
-            else if (!isGrounded && rb.linearVelocity.y <= 0f)
-            {
-                playerState.SetPlayerMovementState(PlayerMovementState.Falling);
-                stepOffset = 0f;
-            }
-            else
-            {
-                stepOffset = privStepOffset;
-            }
-        }
-
-        private void UpdateClimbState(Vector3 moveDir)
-        {
-            bool isPressingIntoWall =
-                moveDir.sqrMagnitude > 0.001f && Vector3.Dot(moveDir.normalized, GetLookForwardXZ()) > 0f;
+                    ? PlayerLocomotionState.Walking
+                    : PlayerLocomotionState.Idling);
             
-            if (isPressingIntoWall && CharacterControllerUtils.TryGetClimbWall(col , moveDir, out RaycastHit wallHit, GetLookForwardXZ(), climbCheckDistance, climbableLayer, slopeLimit, maxClimbAngle))
-            {
-                isClimbing = true;
-                currentWallHit = wallHit;
-                stepOffset = 0f;
-                return;
-            }
-
-            if (isClimbing && CharacterControllerUtils.TryMoveOffWall(currentWallHit, transform, col, groundLayer, climbableLayer, slopeLimit, ledgeSnapUp, ledgeSnapForward))
-            {
-                isClimbing = false;
-                stepOffset = privStepOffset;
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-                return;
-            }
-
-            isClimbing = false;
+            stepOffset = privStepOffset;
         }
 
         private void ResetToRespawnState()
@@ -229,7 +195,7 @@ namespace Platformer
             jumpCooldownTimer = 0f;
             isClimbing = false;
             stepOffset = privStepOffset;
-            playerState.SetPlayerMovementState(PlayerMovementState.Idling);
+            SetPlayerLocomotionState(PlayerLocomotionState.Idling);
         }
 
         #endregion
@@ -266,13 +232,12 @@ namespace Platformer
                 isSprinting ? runAcceleration : walkAcceleration;
 
             //Check speed
-            float moveSpeed = !isGrounded ? runSpeed :
-                isSprinting ? runSpeed : walkSpeed;
+            float moveSpeed = !isGrounded ? runSpeed : isSprinting ? runSpeed : walkSpeed;
 
             Vector3 velocity = rb.linearVelocity;
             Vector3 horizontalVelocity = new Vector3(velocity.x, 0f, velocity.z);
             Vector3 targetVelocity = Vector3.ClampMagnitude(adjustedDirection, 1f) * moveSpeed;
-            
+
             horizontalVelocity = Vector3.MoveTowards(horizontalVelocity, targetVelocity,
                 horizontalAcceleration * Time.fixedDeltaTime);
             velocity.x = horizontalVelocity.x;
@@ -284,14 +249,18 @@ namespace Platformer
                     new Vector3(velocity.x, 0f, velocity.z) * Time.fixedDeltaTime, stepOffset, slopeLimit,
                     groundLayer | climbableLayer, groundLayer, out Vector3 stepDelta))
             {
-                rb.position += stepDelta;
+                float stepUp = Mathf.Min(stepDelta.y, stepUpSpeed * Time.fixedDeltaTime);
+
+                if (stepUp > 0f)
+                    rb.position += Vector3.up * stepUp;
+                
                 velocity.y = Mathf.Max(velocity.y, 0f);
             }
 
             //Steep walls check
             if (!isGrounded)
                 velocity = HandleSteepWalls(velocity);
-            
+
             //Final velocity
             rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
         }
@@ -310,7 +279,8 @@ namespace Platformer
 
         private Vector3 HandleSteepWalls(Vector3 velocity)
         {
-            if (!CharacterControllerUtils.TryGetGroundHit(out RaycastHit hit, transform, col, groundLayer,  climbableLayer, slopeLimit, groundDistance))
+            if (!CharacterControllerUtils.TryGetGroundHit(out RaycastHit hit, transform, col, groundLayer,
+                    climbableLayer, slopeLimit, groundDistance))
                 return velocity;
 
             float angle = Vector3.Angle(hit.normal, Vector3.up);
@@ -323,6 +293,33 @@ namespace Platformer
         #endregion
 
         #region Climbing
+        
+        private void CheckClimbingState(Vector3 moveDir)
+        {
+            bool isPressingIntoWall =
+                moveDir.sqrMagnitude > 0.001f && Vector3.Dot(moveDir.normalized, GetLookForwardXZ()) > 0f;
+
+            if (isPressingIntoWall && CharacterControllerUtils.TryGetClimbWall(col, moveDir, out RaycastHit wallHit,
+                    GetLookForwardXZ(), climbCheckDistance, climbableLayer, slopeLimit, maxClimbAngle))
+            {
+                isClimbing = true;
+                currentWallHit = wallHit;
+                stepOffset = 0f;
+                return;
+            }
+
+            if (isClimbing && CharacterControllerUtils.TryMoveOffWall(currentWallHit, transform, col, groundLayer,
+                    climbableLayer, slopeLimit, ledgeSnapUp, ledgeSnapForward))
+            {
+                isClimbing = false;
+                stepOffset = privStepOffset;
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                return;
+            }
+
+            isClimbing = false;
+        }
 
         public void HandleClimbMovement()
         {
@@ -372,7 +369,8 @@ namespace Platformer
 
         private bool IsGrounded()
         {
-            return CharacterControllerUtils.TryGetGroundHit(out _, transform, col, groundLayer,  climbableLayer, slopeLimit, groundDistance);
+            return CharacterControllerUtils.TryGetGroundHit(out _, transform, col, groundLayer, climbableLayer,
+                slopeLimit, groundDistance);
         }
 
         private bool IsOnMovingPlatform()
@@ -382,17 +380,22 @@ namespace Platformer
 
         private bool ShouldEnterJumpState()
         {
-            return !isClimbing && !IsGrounded() && rb.linearVelocity.magnitude > 0f;
+            return !isClimbing && !IsGrounded() && rb.linearVelocity.y > 0f;
         }
 
         private bool ShouldEnterFallState()
         {
-            return !isClimbing && !IsGrounded() && rb.linearVelocity.magnitude <= 0f;
+            return !isClimbing && !IsGrounded() && rb.linearVelocity.y <= 0f;
         }
 
         private bool ShouldEnterLocomotionState()
         {
             return !isClimbing && IsGrounded();
+        }
+
+        private bool ShouldEnterClimbState()
+        {
+            return isClimbing;
         }
 
         #endregion

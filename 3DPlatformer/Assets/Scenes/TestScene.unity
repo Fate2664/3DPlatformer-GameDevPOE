@@ -3628,7 +3628,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1785341026}
   - component: {fileID: 1785341025}
-  - component: {fileID: 1785341024}
   m_Layer: 6
   m_Name: MovingPlatform (1)
   m_TagString: MovingPlatform
@@ -3636,27 +3635,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!65 &1785341024
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1785341023}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 12, y: 0.4, z: 6.41}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1785341025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3924,6 +3902,7 @@ GameObject:
   - component: {fileID: 1860905614}
   - component: {fileID: 1860905616}
   - component: {fileID: 1860905615}
+  - component: {fileID: 1860905617}
   m_Layer: 6
   m_Name: Cube (3)
   m_TagString: MovingPlatform
@@ -4003,6 +3982,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1860905613}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1860905617
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1860905613}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1940682294
 GameObject:
   m_ObjectHideFlags: 0
@@ -4035,9 +4035,16 @@ MonoBehaviour:
   spawnPointStrategyType: 0
   spawnPoints:
   - {fileID: 1186443782}
+  - {fileID: 1186443782}
   enemyData:
   - {fileID: 11400000, guid: 3fe9f010c464d8b48964bb595b5cb2b9, type: 2}
+  - {fileID: 11400000, guid: 3fe9f010c464d8b48964bb595b5cb2b9, type: 2}
   waypointPaths:
+  - points:
+    - {fileID: 37989101}
+    - {fileID: 1694095257}
+    - {fileID: 1494752394}
+    - {fileID: 261954136}
   - points:
     - {fileID: 37989101}
     - {fileID: 1694095257}
@@ -4163,11 +4170,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 600828184068982731, guid: ddbf386b8065dc844b6a0551f3cdcfbe, type: 3}
       propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2186410463759674682, guid: ddbf386b8065dc844b6a0551f3cdcfbe, type: 3}
-      propertyPath: respawner
-      value: 
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6666975065738540688, guid: ddbf386b8065dc844b6a0551f3cdcfbe, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4340,14 +4343,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1569386046}
     - target: {fileID: 5664247581256510909, guid: 14bcb7012ca80bc478cfa9adc3296543, type: 3}
-      propertyPath: scoreText
-      value: 
-      objectReference: {fileID: 786492655}
-    - target: {fileID: 8707190846045592874, guid: 14bcb7012ca80bc478cfa9adc3296543, type: 3}
-      propertyPath: livesText
-      value: 
-      objectReference: {fileID: 1569386046}
-    - target: {fileID: 8707190846045592874, guid: 14bcb7012ca80bc478cfa9adc3296543, type: 3}
       propertyPath: scoreText
       value: 
       objectReference: {fileID: 786492655}

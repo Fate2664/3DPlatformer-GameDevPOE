@@ -9,7 +9,7 @@ namespace Platformer
         [SerializeField] private float locomotionBlendSpeed = 4f;
 
         private InputReader inputReader;
-        private PlayerState playerState;
+        private PlayerController playerController;
         
         private static int inputXHash =  Animator.StringToHash("MoveX");
         private static int inputYHash =  Animator.StringToHash("MoveY");
@@ -20,7 +20,7 @@ namespace Platformer
         private void Awake()
         {
             inputReader = GetComponent<InputReader>();
-            playerState = GetComponent<PlayerState>();
+            playerController = GetComponent<PlayerController>();
         }
 
         private void LateUpdate()
@@ -30,7 +30,7 @@ namespace Platformer
 
         private void UpdateAnimationState()
         {
-            bool isSprinting = playerState.CurrentPlayerMovementState == PlayerMovementState.Sprinting;
+            bool isSprinting = playerController.CurrentPlayerLocomotionState == PlayerLocomotionState.Sprinting;
             
             Vector2 inputTarget = isSprinting ? inputReader.MovementInput * 1.5f : inputReader.MovementInput;
             currentBlendInput = Vector3.Lerp(currentBlendInput, inputTarget, locomotionBlendSpeed * Time.deltaTime);

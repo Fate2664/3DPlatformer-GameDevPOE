@@ -9,6 +9,9 @@ namespace Platformer
         private StateNode current;
         public IState CurrentState => current?.State;
         
+        //Boolean to check if current state is and instance of type T where T is of IState
+        public bool IsInState<T>() where T : IState => current?.State is T;
+        
         private Dictionary<Type, StateNode> nodes = new();
         private HashSet<ITransition> anyTransitions = new();
 
