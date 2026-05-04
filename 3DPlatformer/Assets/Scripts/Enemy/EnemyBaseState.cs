@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Platformer
 {
+    //This is the base enemy state. All enemy states will inherit from this class
     public abstract class EnemyBaseState : IState
     {
         protected readonly Enemy enemy;
@@ -12,7 +13,7 @@ namespace Platformer
         protected static readonly int walkHash = Animator.StringToHash("Walk");
         protected static readonly int jumpHash = Animator.StringToHash("Jump");
         protected static readonly int runHash = Animator.StringToHash("Run");
-        protected static readonly int attackHash = Animator.StringToHash("Attack");
+        protected static readonly int attackHash = Animator.StringToHash("Attack"); //Currently don't have an enemy attack animation
         
         protected const float crossFadeDuration = 0.2f;
 

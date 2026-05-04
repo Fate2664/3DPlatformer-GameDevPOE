@@ -62,7 +62,7 @@ namespace Platformer
 
         public void OnCrouch(InputAction.CallbackContext context)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public void OnJump(InputAction.CallbackContext context)
@@ -123,6 +123,7 @@ namespace Platformer
 
         public void OnApply(InputAction.CallbackContext context)
         {
+            return;
         }
 
         #endregion

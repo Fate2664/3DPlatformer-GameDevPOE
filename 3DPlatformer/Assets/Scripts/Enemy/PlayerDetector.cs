@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Platformer
 {
+    //This script manages the detection of the player
     public class PlayerDetector : MonoBehaviour
     {
         [SerializeField] private float detectionAngle = 60.0f; //Cone in front of enemy
@@ -19,17 +20,21 @@ namespace Platformer
         {
             detectionTimer = new CountDownTimer(detectionCooldown);
             Player = GameObject.FindWithTag("Player").transform;
+            //Create a new cone detection strategy
             detectionStrategy = new ConeDetectionStrategy(detectionAngle, detectionRadius, innerDetectionRadius);
         }
         
         void Update() => detectionTimer.Tick(Time.deltaTime);
 
+        //Check if enemy can see player
         public bool CanDetectPlayer()
         {
             if (Player == null || detectionTimer == null || detectionStrategy == null) return false;
+            //Detection timer is running and the detection strategy returns true
             return detectionTimer.IsRunning || detectionStrategy.Execute(Player, transform, detectionTimer);
         }
-
+    
+        //Check if enemy can attack player
         public bool CanAttackPlayer()
         {
             var directionToPlayer = Player.position - transform.position;

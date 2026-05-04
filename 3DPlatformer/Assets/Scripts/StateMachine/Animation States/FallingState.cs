@@ -11,7 +11,6 @@ namespace Platformer
         {
             animator.CrossFade(FallingHash, crossFadeDuration);
             fallTimer.Start();
-            Debug.Log("Falling");
         }
 
         public override void FixedUpdate()

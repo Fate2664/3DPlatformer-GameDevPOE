@@ -3,6 +3,7 @@ using UnityEngine.AI;
 
 namespace Platformer
 {
+    //This is the enemy attack state script
     public class EnemyAttackState : EnemyBaseState
     {
         private readonly NavMeshAgent agent;
@@ -18,7 +19,8 @@ namespace Platformer
         {
             animator.CrossFade(attackHash, crossFadeDuration);
         }
-
+        
+        //Go for the player and call the attack method
         public override void Update()
         {
             agent.SetDestination(player.position);

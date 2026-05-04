@@ -3,6 +3,7 @@ using UnityEngine.AI;
 
 namespace Platformer
 {
+    //This script is for the enemy chasing state.
     public class EnemyChaseState : EnemyBaseState
     {
         private readonly NavMeshAgent agent;
@@ -17,9 +18,11 @@ namespace Platformer
         public override void OnEnter()
         {
             animator.CrossFade(runHash, crossFadeDuration);
+            //Increase the enemy's speed 
             agent.speed += 2;
         }
-
+        
+        //Constantly set the enemy's destination to the player position
         public override void Update()
         {
             agent.SetDestination(player.position);
@@ -27,6 +30,7 @@ namespace Platformer
 
         public override void OnExit()
         {
+            //Reset speed
             agent.speed -= 2;
         }
     }

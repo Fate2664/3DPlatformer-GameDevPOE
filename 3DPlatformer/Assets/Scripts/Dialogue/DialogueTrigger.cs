@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//This script manages player interaction with the dialogue trigger and what dialogues to show
 public class DialogueTrigger : MonoBehaviour
 {
     [SerializeField] private DialogueManager DialogueManager;

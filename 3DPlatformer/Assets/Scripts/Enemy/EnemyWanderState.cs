@@ -4,9 +4,11 @@ using UnityEngine.AI;
 
 namespace Platformer
 {
+    //This is the script for the enemy wander state
     public class EnemyWanderState : EnemyBaseState
     {
         private readonly NavMeshAgent agent;
+        //Custom linked list for waypoint points
         private readonly LinkedListBase<Transform> wanderPoints;
         
         private Node<Transform> currentPoint;
@@ -21,6 +23,7 @@ namespace Platformer
         {
             animator.CrossFade(walkHash,  crossFadeDuration);
             
+            //Set the enemy's destination to the first wander point in the linked list
             currentPoint ??= wanderPoints.First;
             agent.SetDestination(currentPoint.Data.position);
         }

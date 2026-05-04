@@ -4019,7 +4019,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1940682295
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4168,9 +4168,41 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 204731813588418077, guid: ddbf386b8065dc844b6a0551f3cdcfbe, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 600828184068982731, guid: ddbf386b8065dc844b6a0551f3cdcfbe, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 956260735841321232, guid: ddbf386b8065dc844b6a0551f3cdcfbe, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3691297132765516410, guid: ddbf386b8065dc844b6a0551f3cdcfbe, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3691908340683471354, guid: ddbf386b8065dc844b6a0551f3cdcfbe, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3692110459650567162, guid: ddbf386b8065dc844b6a0551f3cdcfbe, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3692753112497276578, guid: ddbf386b8065dc844b6a0551f3cdcfbe, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4379778201310555907, guid: ddbf386b8065dc844b6a0551f3cdcfbe, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5836861126620829456, guid: ddbf386b8065dc844b6a0551f3cdcfbe, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6666975065738540688, guid: ddbf386b8065dc844b6a0551f3cdcfbe, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4212,9 +4244,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8720703220373979752, guid: ddbf386b8065dc844b6a0551f3cdcfbe, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 8887828106046452673, guid: ddbf386b8065dc844b6a0551f3cdcfbe, type: 3}
       propertyPath: m_Name
       value: Checkpoint
+      objectReference: {fileID: 0}
+    - target: {fileID: 9129766421297119921, guid: ddbf386b8065dc844b6a0551f3cdcfbe, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

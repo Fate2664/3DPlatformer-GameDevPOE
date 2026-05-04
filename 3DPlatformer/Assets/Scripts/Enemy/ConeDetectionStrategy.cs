@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Platformer
 {
+    //This script is the implementation of a cone detection strategy for detecting the player
     public class ConeDetectionStrategy : IDetectionStrategy
     {
         private readonly float detectionAngle;
@@ -15,6 +16,7 @@ namespace Platformer
             this.innerDetectionRadius = innerDetectionRadius;
         }
 
+        //Check if player is in the cone area
         public bool Execute(Transform player, Transform detector, CountDownTimer timer)
         {
             if (timer.IsRunning) return false;

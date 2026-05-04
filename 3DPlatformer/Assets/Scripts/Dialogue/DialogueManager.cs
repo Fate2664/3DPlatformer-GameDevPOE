@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using Platformer;
 using UnityEngine;
 
+//This script manages how all dialogue will be displayed 
 public class DialogueManager : MonoBehaviour
 {
-    [SerializeField] private DialogueVisuals dialogueVisuals;
+    [SerializeField] private DialogueVisuals dialogueVisuals;   //Assign the dialogue visuals
     [SerializeField] private InputReader input;
 
+    //Create a new Queue for the dialogues and the sentences they hold
     private  QueueBase<DialogueBase> dialogueQueue = new();
     private  QueueBase<string> sentences = new();
     private bool hasStartedDialogue = false;
@@ -34,6 +36,7 @@ public class DialogueManager : MonoBehaviour
         BeginQueuedDialogues();
     }
 
+    //Queue each dialogue in the list to be shown
     public void StartDialogueSequence(List<DialogueBase> dialogues)
     {
         dialogueQueue.Clear();
@@ -60,6 +63,7 @@ public class DialogueManager : MonoBehaviour
         StartNextDialogueBase();
     }
 
+    //Move to the next dialogue base in the list
     private void StartNextDialogueBase()
     {
         if (dialogueQueue.Count == 0)
@@ -81,6 +85,7 @@ public class DialogueManager : MonoBehaviour
         DisplayNextDialogueText();
     }
 
+    //Display next block of text in that dialogue base
     private void DisplayNextDialogueText()
     {
         StopAllCoroutines();
@@ -95,6 +100,7 @@ public class DialogueManager : MonoBehaviour
         StartCoroutine(ShowDialogueText(textToDisplay));
     }
 
+    //Show dialogue text letter by letter in the dialogue box
     private IEnumerator ShowDialogueText(string textToDisplay)
     {
         dialogueVisuals.DialogueText.Text = "";

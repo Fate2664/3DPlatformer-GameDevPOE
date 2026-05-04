@@ -8,7 +8,6 @@ namespace Platformer
 
         public override void OnEnter()
         {
-            Debug.Log("Entering Heavy Land");
             animator.CrossFade(HeavyLandHash, crossFadeDuration);
         }
 

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [Serializable]
+//This script manages the viusals and animations behind the dialogue block 
 public class DialogueVisuals
 {
     public UIBlock2D Background;
