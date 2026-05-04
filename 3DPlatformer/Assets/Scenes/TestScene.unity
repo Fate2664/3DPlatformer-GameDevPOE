@@ -4019,7 +4019,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1940682295
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4233,6 +4233,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 246423958594308367, guid: a093cac19861c4e469878f6753d0d7f4, type: 3}
+      propertyPath: locomotionBlendSpeed
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 2045689774488853677, guid: a093cac19861c4e469878f6753d0d7f4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.5
@@ -4244,6 +4248,38 @@ PrefabInstance:
     - target: {fileID: 2045689774488853677, guid: a093cac19861c4e469878f6753d0d7f4, type: 3}
       propertyPath: m_LocalPosition.z
       value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2423077706907272639, guid: a093cac19861c4e469878f6753d0d7f4, type: 3}
+      propertyPath: m_Interpolate
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4039649995514003314, guid: a093cac19861c4e469878f6753d0d7f4, type: 3}
+      propertyPath: runSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4039649995514003314, guid: a093cac19861c4e469878f6753d0d7f4, type: 3}
+      propertyPath: walkSpeed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4039649995514003314, guid: a093cac19861c4e469878f6753d0d7f4, type: 3}
+      propertyPath: runAcceleration
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 4039649995514003314, guid: a093cac19861c4e469878f6753d0d7f4, type: 3}
+      propertyPath: ledgeProbeHeight
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4039649995514003314, guid: a093cac19861c4e469878f6753d0d7f4, type: 3}
+      propertyPath: walkAcceleration
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4039649995514003314, guid: a093cac19861c4e469878f6753d0d7f4, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 192
+      objectReference: {fileID: 0}
+    - target: {fileID: 4039649995514003314, guid: a093cac19861c4e469878f6753d0d7f4, type: 3}
+      propertyPath: heavyLandTimeThreshold
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4673761845898404283, guid: a093cac19861c4e469878f6753d0d7f4, type: 3}
       propertyPath: livesText

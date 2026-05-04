@@ -44,5 +44,4 @@ namespace Platformer
         
         public abstract void Tick(float deltaTime);
     }
-    
 }

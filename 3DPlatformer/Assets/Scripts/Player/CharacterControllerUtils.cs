@@ -12,7 +12,7 @@ namespace Platformer
             Vector3 flatMove = Vector3.ProjectOnPlane(moveDelta, Vector3.up);
             float moveDistance = flatMove.magnitude;
             if (moveDistance <= 0.001f) return false;
-            
+
             Vector3 moveDirection = flatMove / moveDistance;
             GetCapsuleData(col, out Vector3 top, out Vector3 bottom, out float radius);
 
@@ -47,7 +47,7 @@ namespace Platformer
             float verticalLift = candidateOffset.y - landingHit.distance;
             if (verticalLift <= 0)
                 return false;
-            
+
             stepDelta = Vector3.up * verticalLift;
             return true;
         }
@@ -77,22 +77,14 @@ namespace Platformer
 
         public static bool TryMoveOffWall(RaycastHit currentWallHit, Transform transform, CapsuleCollider col,
             LayerMask groundLayer, LayerMask climbableLayer, float slopeLimit, float ledgeSnapUp,
-            float ledgeSnapForward)
+            float ledgeSnapForward, float ledgeProbeHeight)
         {
-            float ledgeProbeHeight = 1.2f;
-            float ledgeProbeForward = 0.45f;
-            float ledgeProbeDown = 2.0f;
             Vector3 wallNormal = currentWallHit.normal;
             if (wallNormal == Vector3.zero)
                 return false;
 
-            Vector3 center = transform.TransformPoint(col.center);
-
-            //Probe from above the player and slightly over the ledge
-            Vector3 probeOrigin = center + Vector3.up * ledgeProbeHeight - wallNormal * ledgeProbeForward;
-
-            if (!Physics.Raycast(probeOrigin, Vector3.down, out RaycastHit topHit, ledgeProbeDown,
-                    groundLayer | climbableLayer, QueryTriggerInteraction.Ignore))
+            if (!TryGetWallLedge(col, transform, currentWallHit, groundLayer, climbableLayer, ledgeProbeHeight,
+                    out RaycastHit topHit))
                 return false;
 
             float topAngle = Vector3.Angle(topHit.normal, Vector3.up);
@@ -104,6 +96,33 @@ namespace Platformer
 
             transform.position = targetCenter;
 
+            return true;
+        }
+
+        public static bool TryGetWallLedge(CapsuleCollider col, Transform transform, RaycastHit currentWallHit,
+            LayerMask groundLayer, LayerMask climbableLayer, float ledgeProbeHeight, out RaycastHit topHit)
+        {
+            float ledgeProbeForward = 0.45f;
+            float ledgeProbeDown = 1.0f;
+
+            Vector3 wallNormal = currentWallHit.normal;
+            if (wallNormal == Vector3.zero)
+            {
+                topHit = default;
+                return false;
+            }
+
+            GetCapsuleData(col, out Vector3 top, out _, out _);
+            Vector3 probeOrigin = top + Vector3.up * ledgeProbeHeight - wallNormal * ledgeProbeForward;
+
+            if (!Physics.Raycast(probeOrigin, Vector3.down, out RaycastHit hit, ledgeProbeDown,
+                    groundLayer | climbableLayer, QueryTriggerInteraction.Ignore))
+            {
+                topHit = default;
+                return false;
+            }
+
+            topHit = hit;
             return true;
         }
 
@@ -123,8 +142,9 @@ namespace Platformer
             top = center + (transform.up * half);
             bottom = center - (transform.up * half);
         }
-        
-        public static bool TryGetGroundHit(out RaycastHit hit, Transform transform, CapsuleCollider col, LayerMask groundLayer, LayerMask climbableLayer, float  slopeLimit, float groundDistance)
+
+        public static bool TryGetGroundHit(out RaycastHit hit, Transform transform, CapsuleCollider col,
+            LayerMask groundLayer, LayerMask climbableLayer, float slopeLimit, float groundDistance)
         {
             Vector3 center = transform.TransformPoint(col.center);
             float halfSegment = Mathf.Max(0f, (col.height * 0.5f) - col.radius);

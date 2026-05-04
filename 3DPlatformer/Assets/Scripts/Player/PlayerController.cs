@@ -27,12 +27,14 @@ namespace Platformer
         [SerializeField] private float inAirAcceleration = 0.15f;
         [SerializeField] private float jumpCooldown = 0.5f;
         [SerializeField] private float inAirLinearDamping = 0f;
+        [SerializeField] private float heavyLandTimeThreshold = 5.0f;
 
         [Space(10)] [Header("Climbing Settings")] [SerializeField]
         private float climbSpeed = 15f;
 
         [SerializeField] private float climbCheckDistance = 0.3f;
         [SerializeField] private float maxClimbAngle = 90f;
+        [SerializeField] private float ledgeProbeHeight = 0.5f;
         [SerializeField] private float ledgeSnapForward = 0.35f;
         [SerializeField] private float ledgeSnapUp = 0.08f;
 
@@ -69,8 +71,9 @@ namespace Platformer
         private float privStepOffset;
         private float jumpCooldownTimer = 0f;
         private RaycastHit currentWallHit;
-        //TODO move isClimbing logic to PlayerState logic
         private bool isClimbing;
+        private bool isClimbingOverLedge;
+        private static readonly int HeavyLandStateHash = Animator.StringToHash("HeavyLand");
 
         #endregion
 
@@ -95,16 +98,27 @@ namespace Platformer
             var locomotionState = new LocomotionState(this, animator);
             var jumpState = new JumpState(this, animator);
             var fallState = new FallingState(this, animator);
+            var heavyLandState = new HeavyLandState(this, animator);
             var climbState = new ClimbingState(this, animator);
+            var climbOverLedgeState = new LedgeClimbingState(this, animator);
+                
+            //Define transitions:
             
-            //Define transitions
+            //Any state transitions
             Any(jumpState, new FuncPredicate(ShouldEnterJumpState));
             Any(fallState, new FuncPredicate(ShouldEnterFallState));
             Any(climbState, new FuncPredicate(ShouldEnterClimbState));
+            
+            //Transition between states
+            At(fallState, heavyLandState, new FuncPredicate(() => ShouldEnterHeavyLandState(fallState)));
+            At(climbState, climbOverLedgeState, new FuncPredicate(ShouldEnterClimbOverLedgeState));
+            
+            //Transition back to locomotion state
             At(jumpState, locomotionState, new FuncPredicate(ShouldEnterLocomotionState)); //This should never really happen -> jump should always be followed by falling
             At(fallState, locomotionState, new FuncPredicate(ShouldEnterLocomotionState));
+            At(heavyLandState, locomotionState, new FuncPredicate(ShouldExitHeavyLandState));
             At(climbState, locomotionState, new FuncPredicate(ShouldEnterLocomotionState));
-            At(climbState, fallState, new FuncPredicate(ShouldEnterFallState));
+            At(climbOverLedgeState, locomotionState, new FuncPredicate(ShouldEnterLocomotionState));
 
             //Set initial state 
             stateMachine.SetState(locomotionState);
@@ -299,6 +313,13 @@ namespace Platformer
             bool isPressingIntoWall =
                 moveDir.sqrMagnitude > 0.001f && Vector3.Dot(moveDir.normalized, GetLookForwardXZ()) > 0f;
 
+            if (isClimbing && CharacterControllerUtils.TryGetWallLedge(col, transform, currentWallHit, groundLayer,
+                    climbableLayer, ledgeProbeHeight, out _))
+            {
+                isClimbingOverLedge = true;
+                return;
+            }
+            
             if (isPressingIntoWall && CharacterControllerUtils.TryGetClimbWall(col, moveDir, out RaycastHit wallHit,
                     GetLookForwardXZ(), climbCheckDistance, climbableLayer, slopeLimit, maxClimbAngle))
             {
@@ -307,9 +328,9 @@ namespace Platformer
                 stepOffset = 0f;
                 return;
             }
-
+            
             if (isClimbing && CharacterControllerUtils.TryMoveOffWall(currentWallHit, transform, col, groundLayer,
-                    climbableLayer, slopeLimit, ledgeSnapUp, ledgeSnapForward))
+                    climbableLayer, slopeLimit, ledgeSnapUp, ledgeSnapForward, ledgeProbeHeight / 3))
             {
                 isClimbing = false;
                 stepOffset = privStepOffset;
@@ -318,6 +339,8 @@ namespace Platformer
                 return;
             }
 
+            
+            isClimbingOverLedge = false;
             isClimbing = false;
         }
 
@@ -385,7 +408,12 @@ namespace Platformer
 
         private bool ShouldEnterFallState()
         {
-            return !isClimbing && !IsGrounded() && rb.linearVelocity.y <= 0f;
+            return !isClimbing && !stateMachine.IsInState<HeavyLandState>() && !IsGrounded() && rb.linearVelocity.y <= 0f;
+        }
+
+        private bool ShouldEnterHeavyLandState(FallingState fallState)
+        {
+            return !isClimbing && IsGrounded() && fallState.fallTimer.GetTime() >= heavyLandTimeThreshold;
         }
 
         private bool ShouldEnterLocomotionState()
@@ -393,9 +421,22 @@ namespace Platformer
             return !isClimbing && IsGrounded();
         }
 
+        private bool ShouldExitHeavyLandState()
+        {
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            return !animator.IsInTransition(0)
+                   && stateInfo.shortNameHash == HeavyLandStateHash
+                   && stateInfo.normalizedTime >= 1f;
+        }
+
         private bool ShouldEnterClimbState()
         {
-            return isClimbing;
+            return isClimbing && !isClimbingOverLedge;
+        }
+
+        private bool ShouldEnterClimbOverLedgeState()
+        {
+            return isClimbing && isClimbingOverLedge;
         }
 
         #endregion
