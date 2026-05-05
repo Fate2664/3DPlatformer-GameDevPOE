@@ -2,6 +2,7 @@
 
 namespace Platformer
 {
+    //This script spawns whatever T is according to the spawn strategy
     public class EntitySpawner<T> where T : Entity
     {
         private IEntityFactory<T> entityFactory;
@@ -13,7 +14,7 @@ namespace Platformer
             this.spawnPointStrategy = spawnPointStrategy;
         }
 
-        public T Spawn(out Transform spawnPoint)    //Get a reference to the next spawn point
+        public T Spawn(out Transform spawnPoint)    //Get a reference to the next spawn point (this is for spawning enemies at different locations)
         {
             spawnPoint = spawnPointStrategy.NextSpawnPoint();
             return entityFactory.Create(spawnPoint);

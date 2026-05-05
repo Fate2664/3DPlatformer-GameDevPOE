@@ -4,49 +4,56 @@ using UnityEngine;
 
 namespace Platformer
 {
+    //This is the main player controller script. It manages player movement, states and the player camera
     public class PlayerController : MonoBehaviour, IRespawnable
     {
         #region Serialized Class Variables
-
-        [Header("References")] [SerializeField]
-        private Camera playerCamera;
-
+    
+        [Header("References")] 
+        [SerializeField] private Camera playerCamera;
         [SerializeField] private Transform playerRoot;
-
-        [Header("Movement Settings")] [SerializeField]
-        private float walkSpeed = 6.0f;
-
+        
+        //Base movement settings
+        [Header("Movement Settings")] 
+        [SerializeField] private float walkSpeed = 6.0f;
         [SerializeField] private float groundLinearDamping = 6f;
         [SerializeField] private float walkAcceleration = 0.15f;
         [SerializeField] private float slopeLimit = 45f;
         [SerializeField] private float stepOffset = 0.03f;
         [SerializeField] private float stepUpSpeed = 2.5f; 
-        [Space(10)] [SerializeField] private float runSpeed = 12f;
+        [Space(10)] 
+        //Run settings
+        [SerializeField] private float runSpeed = 12f;
         [SerializeField] private float runAcceleration = 0.25f;
-        [Space(10)] [SerializeField] private float jumpForce = 1.0f;
+        [Space(10)] 
+        //Jump settings
+        [SerializeField] private float jumpForce = 1.0f;
         [SerializeField] private float inAirAcceleration = 0.15f;
         [SerializeField] private float jumpCooldown = 0.5f;
         [SerializeField] private float inAirLinearDamping = 0f;
         [SerializeField] private float heavyLandTimeThreshold = 5.0f;
-
-        [Space(10)] [Header("Climbing Settings")] [SerializeField]
-        private float climbSpeed = 15f;
-
+        
+        [Space(10)] 
+        //Climbing settings
+        [Header("Climbing Settings")] 
+        [SerializeField] private float climbSpeed = 15f;
         [SerializeField] private float climbCheckDistance = 0.3f;
         [SerializeField] private float maxClimbAngle = 90f;
         [SerializeField] private float ledgeProbeHeight = 0.5f;
         [SerializeField] private float ledgeSnapForward = 0.35f;
         [SerializeField] private float ledgeSnapUp = 0.08f;
 
-        [Space(10)] [Header("Camera Settings")] [SerializeField]
-        private float lookSenseH = 0.1f;
-
+        [Space(10)] 
+        //Camera settings
+        [Header("Camera Settings")] 
+        [SerializeField] private float lookSenseH = 0.1f;
         [SerializeField] private float lookSenseV = 0.1f;
         [SerializeField] private float lookLimitV = 70f;
 
-        [Space(10)] [Header("Environmental Details")] [SerializeField]
-        private LayerMask groundLayer;
-
+        [Space(10)] 
+        //Environmental settings
+        [Header("Environmental Details")]
+        [SerializeField] private LayerMask groundLayer;
         [SerializeField] private float groundDistance = 0.5f;
         [SerializeField] private LayerMask climbableLayer;
 
@@ -102,7 +109,7 @@ namespace Platformer
             var climbState = new ClimbingState(this, animator);
             var climbOverLedgeState = new LedgeClimbingState(this, animator);
                 
-            //Define transitions:
+            //Define animation state transitions:
             
             //Any state transitions
             Any(jumpState, new FuncPredicate(ShouldEnterJumpState));
@@ -123,7 +130,8 @@ namespace Platformer
             //Set initial state 
             stateMachine.SetState(locomotionState);
         }
-
+        
+        //Animation state transition methods
         private void At(IState from, IState to, IPredicate condition) =>
             stateMachine.AddTransition(from, to, condition);
         private void Any(IState to, IPredicate condition) => stateMachine.AddAnyTransition(to, condition);
@@ -142,10 +150,13 @@ namespace Platformer
 
         private void Update()
         {
+            //Update the target yaw and pitch for the camera
             targetYaw += lookSenseH * input.LookInput.x;
             targetPitch = Mathf.Clamp(targetPitch - lookSenseV * input.LookInput.y, -lookLimitV, lookLimitV);
-
+            
+            //Get the relative move direction to the camera
             moveDirection = GetCameraRelativeMoveDirection();
+            //Set linear damping depending on state
             rb.linearDamping = isClimbing ? 0f : IsGrounded() ? groundLinearDamping : inAirLinearDamping;
 
             if (input.JumpPressed)
@@ -159,10 +170,12 @@ namespace Platformer
         {
             if (jumpCooldownTimer > 0f)
                 jumpCooldownTimer -= Time.fixedDeltaTime;
-
+            //Check climbing state            
             CheckClimbingState(moveDirection);
+            
             stateMachine.FixedUpdate();
             
+            //Reset jump queued
             jumpQueued = false;
         }
 
@@ -176,11 +189,9 @@ namespace Platformer
 
         #region Update State Methods
         
-        public void SetPlayerLocomotionState(PlayerLocomotionState playerLocomotionState)
-        {
-            CurrentPlayerLocomotionState = playerLocomotionState;
-        }
-
+        public void SetPlayerLocomotionState(PlayerLocomotionState playerLocomotionState) => CurrentPlayerLocomotionState = playerLocomotionState;
+        
+        //This method updates the PlayerLocomotionState enum depending on the player state
         private void UpdateLocomotionState()
         {
             if (isClimbing || stateMachine.IsInState<JumpState>() || stateMachine.IsInState<FallingState>())
@@ -201,7 +212,8 @@ namespace Platformer
             
             stepOffset = privStepOffset;
         }
-
+        
+        //This method resets the player's parameters for respawning
         private void ResetToRespawnState()
         {
             rb.linearVelocity = Vector3.zero;
@@ -215,7 +227,8 @@ namespace Platformer
         #endregion
 
         #region Movement & Camera Methods
-
+        
+        //Get camera direction relative to the player move direction
         private Vector3 GetCameraRelativeMoveDirection()
         {
             Quaternion yawRotation = Quaternion.Euler(0f, targetYaw, 0f);
@@ -224,19 +237,22 @@ namespace Platformer
 
             return Vector3.ClampMagnitude(right * input.MovementInput.x + forward * input.MovementInput.y, 1f);
         }
-
+        
+        //This method returns the camera's forward vector for the X and Z axis
         private Vector3 GetLookForwardXZ()
         {
             Vector3 forward = playerCamera.transform.forward;
             forward.y = 0;
             return forward.sqrMagnitude > 0.001f ? forward.normalized : Vector3.forward;
         }
-
+        
+        //This is a public method that executes the private horizontal movement method
         public void HandleMovement()
         {
             HandleHorizontalMovement(moveDirection, IsGrounded());
         }
-
+    
+        //This method handles the horizontal movement for the player
         void HandleHorizontalMovement(Vector3 adjustedDirection, bool isGrounded)
         {
             bool isSprinting = isGrounded && input.SprintToggledOn;
@@ -250,8 +266,10 @@ namespace Platformer
 
             Vector3 velocity = rb.linearVelocity;
             Vector3 horizontalVelocity = new Vector3(velocity.x, 0f, velocity.z);
+            //Get the target velocity according to the movement speed
             Vector3 targetVelocity = Vector3.ClampMagnitude(adjustedDirection, 1f) * moveSpeed;
 
+            //Make the horizontal velocity move towards the target velocity according to the acceleration and assign it to the overall velocity
             horizontalVelocity = Vector3.MoveTowards(horizontalVelocity, targetVelocity,
                 horizontalAcceleration * Time.fixedDeltaTime);
             velocity.x = horizontalVelocity.x;
@@ -271,32 +289,33 @@ namespace Platformer
                 velocity.y = Mathf.Max(velocity.y, 0f);
             }
 
-            //Steep walls check
+            //Steep slopes check
             if (!isGrounded)
-                velocity = HandleSteepWalls(velocity);
+                velocity = HandleSteepSlopes(velocity);
 
             //Final velocity
             rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
         }
-
+        
+        //This method handles the jumping for the player
         public void HandleJump()
         {
             if (!jumpQueued || !IsGrounded() || jumpCooldownTimer > 0f)
                 return;
-
-            Vector3 velocity = rb.linearVelocity;
-            rb.linearVelocity = velocity;
+            
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
             jumpCooldownTimer = jumpCooldown;
         }
-
-        private Vector3 HandleSteepWalls(Vector3 velocity)
+        
+        //This methos handles steep slopes 
+        private Vector3 HandleSteepSlopes(Vector3 velocity)
         {
             if (!CharacterControllerUtils.TryGetGroundHit(out RaycastHit hit, transform, col, groundLayer,
                     climbableLayer, slopeLimit, groundDistance))
                 return velocity;
-
+            
+            //If the player is on an angle that is steeper than the slope limit, make them slide down that slope
             float angle = Vector3.Angle(hit.normal, Vector3.up);
             if (angle > slopeLimit && rb.linearVelocity.y <= 0f)
                 velocity = Vector3.ProjectOnPlane(velocity, hit.normal);
@@ -308,18 +327,21 @@ namespace Platformer
 
         #region Climbing
         
+        //This method is used to check the state that the player should be in with regards to climbing
         private void CheckClimbingState(Vector3 moveDir)
         {
             bool isPressingIntoWall =
                 moveDir.sqrMagnitude > 0.001f && Vector3.Dot(moveDir.normalized, GetLookForwardXZ()) > 0f;
-
+            
+            //Climbing over ledge check
             if (isClimbing && CharacterControllerUtils.TryGetWallLedge(col, transform, currentWallHit, groundLayer,
                     climbableLayer, ledgeProbeHeight, out _))
             {
                 isClimbingOverLedge = true;
                 return;
             }
-            
+                
+            //Climbing check
             if (isPressingIntoWall && CharacterControllerUtils.TryGetClimbWall(col, moveDir, out RaycastHit wallHit,
                     GetLookForwardXZ(), climbCheckDistance, climbableLayer, slopeLimit, maxClimbAngle))
             {
@@ -329,6 +351,7 @@ namespace Platformer
                 return;
             }
             
+            //Trying to move over ledge check
             if (isClimbing && CharacterControllerUtils.TryMoveOffWall(currentWallHit, transform, col, groundLayer,
                     climbableLayer, slopeLimit, ledgeSnapUp, ledgeSnapForward, ledgeProbeHeight / 3))
             {
@@ -343,13 +366,14 @@ namespace Platformer
             isClimbingOverLedge = false;
             isClimbing = false;
         }
-
+        
+        //This method handles the actual climbing movement of the player
         public void HandleClimbMovement()
         {
             Vector3 wallNormal = currentWallHit.normal;
             Vector3 wallUp = Vector3.ProjectOnPlane(Vector3.up, wallNormal).normalized;
             Vector3 wallRight = Vector3.Cross(wallUp, wallNormal).normalized;
-
+            
             Vector3 desired = wallRight * input.MovementInput.x + wallUp * input.MovementInput.y;
             desired = Vector3.ClampMagnitude(desired, 1f) * climbSpeed;
 
@@ -362,19 +386,24 @@ namespace Platformer
         #endregion
 
         #region Respawning
-
+        
+        //This method respawns the player a checkpoint by transforming their location
         public void RespawnAt(RespawnPointData checkpoint)
         {
             ResetToRespawnState();
-
+            
+            //Reset camera look direction
             targetYaw = checkpoint.Rotation.eulerAngles.y;
             targetPitch = 0f;
 
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
+            
+            //Move player to checkpoint position
             rb.position = checkpoint.Position;
             rb.rotation = checkpoint.Rotation;
-
+            
+            //Rotate camera and player according to target direction
             playerCamera.transform.rotation = Quaternion.Euler(targetPitch, targetYaw, 0f);
             playerRoot.rotation = Quaternion.Euler(0f, targetYaw, 0f);
         }
@@ -382,7 +411,9 @@ namespace Platformer
         #endregion
 
         #region State Checks
-
+        
+        //These methods help determine what state the player should be in by defining their rules
+        
         private bool IsMovingHorizontally()
         {
             Vector3 horizontalVelocity =

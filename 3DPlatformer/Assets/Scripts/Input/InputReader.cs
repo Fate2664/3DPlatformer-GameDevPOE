@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 namespace Platformer
 {
+    //This is a script for reading the inputs from the player. It uses unity's input actions
     public class InputReader : MonoBehaviour, PlayerInputActions.IPlayerActions, PlayerInputActions.IUIActions
     {
         #region Class Variables
@@ -40,7 +41,8 @@ namespace Platformer
                 inputActions.Disable();
             }
         }
-
+        
+        //Reset boolean flags
         private void LateUpdate()
         {
             JumpPressed = false;

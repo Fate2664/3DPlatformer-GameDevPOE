@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4829941863529266}
   - component: {fileID: 33112152252152084}
   - component: {fileID: 23174848903185002}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EA03_Prop_Pier_01c_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 4566587323665946}
   - component: {fileID: 33566069508957780}
   - component: {fileID: 23282068572147210}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EA03_Prop_Pier_01c_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,7 +191,7 @@ GameObject:
   - component: {fileID: 4804749873380194}
   - component: {fileID: 33850340738101186}
   - component: {fileID: 23474211747596226}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EA03_Prop_Pier_01c_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -281,7 +281,7 @@ GameObject:
   - component: {fileID: 4846128594373156}
   - component: {fileID: 205397964189449028}
   - component: {fileID: 3469839290096813446}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EA03_Prop_Pier_01c_PRE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
