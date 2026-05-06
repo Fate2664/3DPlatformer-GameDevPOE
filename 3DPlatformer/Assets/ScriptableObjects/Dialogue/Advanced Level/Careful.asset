@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1af72774d70ff54d814ead2dc30a07d, type: 3}
   m_Name: Careful
   m_EditorClassIdentifier: Assembly-CSharp::DialogueBase
-  DialogueName: Heron
+  DialogueName: Cat
   DialogueText:
-  - 'Careful now. These patforms are much higher than the others. '
+  - 'Careful now. These patforms are much less sturdy than the others. '

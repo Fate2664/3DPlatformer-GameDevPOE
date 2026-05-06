@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1af72774d70ff54d814ead2dc30a07d, type: 3}
   m_Name: Head Up
   m_EditorClassIdentifier: Assembly-CSharp::DialogueBase
-  DialogueName: Heron
+  DialogueName: Cat
   DialogueText:
   - Head up little one. You'll have the ability to remember soon...

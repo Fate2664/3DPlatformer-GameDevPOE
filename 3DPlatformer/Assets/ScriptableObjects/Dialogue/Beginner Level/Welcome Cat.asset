@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1af72774d70ff54d814ead2dc30a07d, type: 3}
-  m_Name: Welcome Heron
+  m_Name: Welcome Cat
   m_EditorClassIdentifier: Assembly-CSharp::DialogueBase
-  DialogueName: Heron
+  DialogueName: Cat
   DialogueText:
   - Hello. I am here to help you find your way through this dark time.
   - 'Be careful in this realm, the water is not save... '

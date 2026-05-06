@@ -119,7 +119,7 @@ namespace Platformer
             //Define checking values
             float ledgeProbeForward = 0.45f;
             float ledgeProbeDown = 1.0f;
-            float minTopDot = 0.4f;
+            float minTopDot = 0.3f;
             
             //Get wall normal and flatten it
             Vector3 wallNormal = Vector3.ProjectOnPlane(currentWallHit.normal, Vector3.up);

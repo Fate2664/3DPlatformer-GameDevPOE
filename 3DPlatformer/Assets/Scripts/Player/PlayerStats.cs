@@ -12,6 +12,9 @@ namespace Platformer
         [SerializeField] private int startingScore = 0;
         [SerializeField] private TextBlock scoreText;
         [SerializeField] private TextBlock livesText;
+        
+        private static bool hasPersistedScore;
+        private static int persistedScore;
 
         public int Lives { get; private set; }
         public int Score { get; private set; }
@@ -24,6 +27,7 @@ namespace Platformer
         {
             //Initiate starting lives
             RestoreLives();
+            RestoreScore();
         }
         
         //Subscrible to the unity actions
@@ -51,6 +55,8 @@ namespace Platformer
         public void IncrementScore(int amount)
         {
             Score += amount;
+            persistedScore = Score;
+            hasPersistedScore = true;
             ScoreChanged?.Invoke(Score);
         }
         
@@ -75,6 +81,14 @@ namespace Platformer
         {
             Lives = startingLives;
             LivesChanged?.Invoke(Lives);
+        }
+
+        private void RestoreScore()
+        {
+            Score = hasPersistedScore ? persistedScore : startingScore;
+            persistedScore = Score;
+            hasPersistedScore = true;
+            ScoreChanged?.Invoke(Score);
         }
 
         private void UpdateScoreText(int score)

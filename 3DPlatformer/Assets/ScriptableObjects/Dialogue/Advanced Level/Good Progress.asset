@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1af72774d70ff54d814ead2dc30a07d, type: 3}
   m_Name: Good Progress
   m_EditorClassIdentifier: Assembly-CSharp::DialogueBase
-  DialogueName: Heron
+  DialogueName: Cat
   DialogueText:
   - You're making good progress little one.
   - 'You must keep fighting the powers that are trying to stop you.  '

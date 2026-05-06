@@ -14,6 +14,7 @@ public class DialogueManager : MonoBehaviour
     private  QueueBase<DialogueBase> dialogueQueue = new();
     private  QueueBase<string> sentences = new();
     private bool hasStartedDialogue = false;
+    private Action onDialogueComplete;
 
     private void Update()
     {
@@ -29,17 +30,19 @@ public class DialogueManager : MonoBehaviour
         set => hasStartedDialogue = value;
     }
 
-    public void StartDialogue(DialogueBase dialogue)
+    public void StartDialogue(DialogueBase dialogue, Action onComplete = null)
     {
         dialogueQueue.Clear();
+        onDialogueComplete = onComplete;
         dialogueQueue.Enqueue(dialogue);
         BeginQueuedDialogues();
     }
 
     //Queue each dialogue in the list to be shown
-    public void StartDialogueSequence(List<DialogueBase> dialogues)
+    public void StartDialogueSequence(List<DialogueBase> dialogues, Action onComplete = null)
     {
         dialogueQueue.Clear();
+        onDialogueComplete = onComplete;
         foreach (DialogueBase dialogue in dialogues)
         {
             dialogueQueue.Enqueue(dialogue);
@@ -119,5 +122,8 @@ public class DialogueManager : MonoBehaviour
     {
         hasStartedDialogue = false;
         dialogueVisuals.Hide();
+        Action callback = onDialogueComplete;
+        onDialogueComplete = null;
+        callback?.Invoke();
     }
 }

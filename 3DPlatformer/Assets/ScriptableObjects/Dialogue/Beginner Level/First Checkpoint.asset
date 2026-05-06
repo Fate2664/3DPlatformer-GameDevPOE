@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1af72774d70ff54d814ead2dc30a07d, type: 3}
   m_Name: First Checkpoint
   m_EditorClassIdentifier: Assembly-CSharp::DialogueBase
-  DialogueName: Heron
+  DialogueName: Cat
   DialogueText:
   - You made it to the first safe zone. However, there's still a long way to go.
   - I am by your side all the way.
