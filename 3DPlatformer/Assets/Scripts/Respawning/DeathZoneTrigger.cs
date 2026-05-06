@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Platformer
 {
+    //This script is for the death zone below the water to respawn the player if they fall in it
     public class DeathZoneTrigger : MonoBehaviour
     {
         [SerializeField] private Respawner respawner;

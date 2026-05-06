@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Platformer
 {
+    //This script allows for effects to appear when an entity is spawned
     public class SpawnEffects : MonoBehaviour
     {
         [SerializeField] private GameObject spawnVFX;
@@ -11,6 +12,7 @@ namespace Platformer
 
         private void Start()
         {
+            //Makes the entity have a pop in animation
             transform.localScale = Vector3.zero;
             transform.DOScale(Vector3.one, animationDuration).SetEase(Ease.OutBack);
 

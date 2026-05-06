@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Platformer
 {
+    //This is an enum for all the player locomotion states. A locomotion state is seperate from other movement states such as Jumping, Climbing and Falling
     public enum PlayerLocomotionState
     {
         Idling = 0,
@@ -9,11 +10,13 @@ namespace Platformer
         Sprinting = 2,
     }
     
+    //This is the base player state class. All player states will inherit from this.
     public abstract class PlayerBaseState : IState
     {
         protected readonly PlayerController player;
         protected readonly Animator animator;
         
+        //Animation hashes
         protected static readonly int LocomotionHash = Animator.StringToHash("Locomotion");
         protected static readonly int JumpHash = Animator.StringToHash("Jump");
         protected static readonly int FallingHash = Animator.StringToHash("Fall");

@@ -2,6 +2,7 @@
 
 namespace Platformer
 {
+    //This is the linear spawn point strategy. It spawns each entity one after the other
     public class LinearSpawnPointStrategy : ISpawnPointStrategy
     {
         private int index = 0;

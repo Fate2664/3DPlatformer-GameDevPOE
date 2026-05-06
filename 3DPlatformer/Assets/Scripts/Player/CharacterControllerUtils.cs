@@ -103,11 +103,6 @@ namespace Platformer
                     out RaycastHit topHit))
                 return false;
             
-            //Check if ledge angle is walkable
-            // float topAngle = Vector3.Angle(topHit.normal, Vector3.up);
-            // if (topAngle > slopeLimit)
-            //     return false;
-            
             //Create a transform delta to move player
             Vector3 targetCenter =
                 topHit.point + Vector3.up * ledgeSnapUp - wallNormal * ledgeSnapForward;

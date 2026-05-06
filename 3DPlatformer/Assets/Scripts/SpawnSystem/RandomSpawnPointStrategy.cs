@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Platformer
 {
+    //This is the random spawn point strategy. It spawn the entities at a random spawn point index
     public class RandomSpawnPointStrategy : ISpawnPointStrategy
     {
         private List<Transform> unusedSpawnPoints;
@@ -20,9 +21,9 @@ namespace Platformer
             if (!unusedSpawnPoints.Any())
                 unusedSpawnPoints = new List<Transform>(spawnPoints);
             
-            var randormIndex  = Random.Range(0, unusedSpawnPoints.Count);
-            Transform result = unusedSpawnPoints[randormIndex];
-            unusedSpawnPoints.RemoveAt(randormIndex);
+            var randomIndex  = Random.Range(0, unusedSpawnPoints.Count);
+            Transform result = unusedSpawnPoints[randomIndex];
+            unusedSpawnPoints.RemoveAt(randomIndex);
             return result;
         }
     }

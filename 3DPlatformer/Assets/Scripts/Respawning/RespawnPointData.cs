@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Platformer
 {
+    //This sctruct defines the variables for a respawn point
     public struct RespawnPointData
     {
         public string Id;
@@ -26,6 +27,7 @@ namespace Platformer
 
 namespace Platformer
 {
+    //This interface is a contract for all respawnables to inherit from
     public interface IRespawnable
     {
         void RespawnAt(RespawnPointData checkpoint);

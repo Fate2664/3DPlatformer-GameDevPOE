@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Platformer
 {
+    //This script manages the respawning and registering of checkpoints for the player
     public class Respawner : MonoBehaviour
     {
         [SerializeField] private Transform startRespawnPoint;
@@ -12,13 +13,14 @@ namespace Platformer
         private CheckpointStack<RespawnPointData>  checkpointHistory = new ();
         private IRespawnable respawnable;
         private bool respawnQueued;
-            
+        
         private void Awake()
         {
             playerController = GetComponent<PlayerController>();
             playerStats = playerController.GetComponent<PlayerStats>();
             
             respawnable = playerController as IRespawnable;
+            //Register the begining start point
             if (startRespawnPoint != null)
             {
                 RegisterCheckpoint("Start", startRespawnPoint);
@@ -34,6 +36,7 @@ namespace Platformer
             HandleRespawn();
         }
 
+        //Push the checkpoint stack to add the new checkpoint
         public void RegisterCheckpoint(string checkpointId, Transform checkpointTransform)
         {
             checkpointHistory.Push(new RespawnPointData(checkpointId, checkpointTransform.position, checkpointTransform.rotation, playerStats.CreateSnapshot()));

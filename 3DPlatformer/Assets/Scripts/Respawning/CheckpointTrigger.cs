@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Platformer
 {
+    //This script registers a checkpoint when the player enters the trigger box
     public class CheckpointTrigger : MonoBehaviour
     {
         [SerializeField] private Respawner respawner;

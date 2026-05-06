@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Platformer
 {
+    //This is the concrete tranistion script that uses the ITransition interface
     public class Transition : ITransition
     {
         public IState To { get; }

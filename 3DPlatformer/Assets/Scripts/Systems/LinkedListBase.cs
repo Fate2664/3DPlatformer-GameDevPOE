@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Platformer
 {
+    //This class represents a node in the linked list
     public class Node<T>
     {
         public T Data { get; set; }
@@ -13,12 +14,14 @@ namespace Platformer
         }
     }
     
+    //This is the custom linked list data type
     public class LinkedListBase<T>
     {
         public Node<T> First { get; private set; }
         public Node<T> Last { get; private set; }
         public int Count { get; private set; }
-
+    
+        //This method inserts a node in the front of the list
         public void AddFirst(Node<T> newNode)
         {
             //Check if list is empty
@@ -34,7 +37,8 @@ namespace Platformer
             }
             this.Count++;
         }
-
+        
+        //This method inserts a node at the end of the list
         public void AddLast(Node<T> newNode)
         {
             //Check if list is empty
@@ -50,7 +54,8 @@ namespace Platformer
             }
             Count++;
         }
-
+    
+        //This method inserts a new node directly after the newNode
         public void AddAfter(Node<T> newNode, Node<T> existingNode)
         {
             //Check if existing not is last so we don't add after last node
@@ -61,7 +66,8 @@ namespace Platformer
             existingNode.Next = newNode;
             this.Count++;
         }
-
+        
+        //This method searches the list for a node whose data matches the target
         public Node<T> Find(T target)
         {
             Node<T> currentNode = First;
@@ -72,6 +78,7 @@ namespace Platformer
             return currentNode;
         }
 
+        //This method removes the first node in the list
         public void RemoveFirst()
         {
             if (First == null || this.Count == 0)
@@ -80,7 +87,8 @@ namespace Platformer
             First = First.Next;
             this.Count--;
         }
-
+    
+        //This method removes a specific node from the list
         public void Remove(Node<T> removingNode)
         {
             if (First == null || this.Count == 0)
