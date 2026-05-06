@@ -164,25 +164,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.PlayerController
   playerCamera: {fileID: 7768505184987678847}
   playerRoot: {fileID: 4692724680701476113}
-  walkSpeed: 4
-  groundLinearDamping: 20
+  walkSpeed: 2.5
+  groundLinearDamping: 1
   walkAcceleration: 100
   slopeLimit: 45
   stepOffset: 0.5
   stepUpSpeed: 2.5
-  runSpeed: 10
+  runSpeed: 5
   runAcceleration: 200
-  jumpForce: 12
+  jumpForce: 8
   inAirAcceleration: 2
   jumpCooldown: 0.8
   inAirLinearDamping: 0.2
-  heavyLandTimeThreshold: 0.5
+  heavyLandTimeThreshold: 0.7
   climbSpeed: 1.3
-  climbCheckDistance: 0.3
+  climbCheckDistance: 0.2
   maxClimbAngle: 90
   ledgeProbeHeight: 0.5
   ledgeSnapForward: 0.005
-  ledgeSnapUp: 0
+  ledgeSnapUp: 0.01
   lookSenseH: 0.1
   lookSenseV: 0.1
   lookLimitV: 70

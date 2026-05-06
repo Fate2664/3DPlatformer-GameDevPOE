@@ -9,6 +9,7 @@ namespace Platformer
     public class Enemy : Entity
     {
         [SerializeField] private float timeBetweenAttacks = 1f;
+        [SerializeField] private float moveSpeed = 1f;
         
         private NavMeshAgent agent;
         private Animator animator;
@@ -25,6 +26,7 @@ namespace Platformer
             //Create a new state machine for the enemy
             stateMachine = new StateMachine();
             attackTimer = new CountDownTimer(timeBetweenAttacks);
+            agent.speed = moveSpeed;
         }
 
         private void Start()

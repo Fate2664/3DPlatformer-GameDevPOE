@@ -8,6 +8,7 @@ namespace Platformer
     {
         private readonly NavMeshAgent agent;
         private readonly Transform player;
+        private readonly float sprintSpeed = 2.0f;
 
         public EnemyChaseState(Enemy enemy, Animator animator, NavMeshAgent agent, Transform player) : base(enemy, animator)
         {
@@ -19,7 +20,7 @@ namespace Platformer
         {
             animator.CrossFade(runHash, crossFadeDuration);
             //Increase the enemy's speed 
-            agent.speed += 2;
+            agent.speed += sprintSpeed;
         }
         
         //Constantly set the enemy's destination to the player position
@@ -31,7 +32,7 @@ namespace Platformer
         public override void OnExit()
         {
             //Reset speed
-            agent.speed -= 2;
+            agent.speed -= sprintSpeed;
         }
     }
 }

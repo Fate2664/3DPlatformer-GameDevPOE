@@ -104,9 +104,9 @@ namespace Platformer
                 return false;
             
             //Check if ledge angle is walkable
-            float topAngle = Vector3.Angle(topHit.normal, Vector3.up);
-            if (topAngle > slopeLimit)
-                return false;
+            // float topAngle = Vector3.Angle(topHit.normal, Vector3.up);
+            // if (topAngle > slopeLimit)
+            //     return false;
             
             //Create a transform delta to move player
             Vector3 targetCenter =
@@ -124,14 +124,16 @@ namespace Platformer
             //Define checking values
             float ledgeProbeForward = 0.45f;
             float ledgeProbeDown = 1.0f;
+            float minTopDot = 0.4f;
             
-            //Get wall normal
-            Vector3 wallNormal = currentWallHit.normal;
-            if (wallNormal == Vector3.zero)
+            //Get wall normal and flatten it
+            Vector3 wallNormal = Vector3.ProjectOnPlane(currentWallHit.normal, Vector3.up);
+            if (wallNormal.sqrMagnitude < 0.001f)
             {
                 topHit = default;
                 return false;
             }
+            wallNormal.Normalize();
             
             //Get the top of the player and create a probe origin to check from
             GetCapsuleData(col, out Vector3 top, out _, out _);
@@ -140,6 +142,13 @@ namespace Platformer
             //Actually check by raycasting at the probe origin
             if (!Physics.Raycast(probeOrigin, Vector3.down, out RaycastHit hit, ledgeProbeDown,
                     groundLayer | climbableLayer, QueryTriggerInteraction.Ignore))
+            {
+                topHit = default;
+                return false;
+            }
+            
+            //Make sure we found a top surface and not part of the wall
+            if (Vector3.Dot(hit.normal, Vector3.up) < minTopDot)
             {
                 topHit = default;
                 return false;

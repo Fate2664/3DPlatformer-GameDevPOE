@@ -353,7 +353,7 @@ namespace Platformer
             
             //Trying to move over ledge check
             if (isClimbing && CharacterControllerUtils.TryMoveOffWall(currentWallHit, transform, col, groundLayer,
-                    climbableLayer, slopeLimit, ledgeSnapUp, ledgeSnapForward, ledgeProbeHeight / 3))
+                    climbableLayer, slopeLimit, ledgeSnapUp, ledgeSnapForward, ledgeProbeHeight))
             {
                 isClimbing = false;
                 stepOffset = privStepOffset;
