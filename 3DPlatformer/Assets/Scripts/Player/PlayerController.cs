@@ -421,11 +421,9 @@ namespace Platformer
             return horizontalVelocity.magnitude > 0.01f;
         }
 
-        private bool IsGrounded()
-        {
-            return CharacterControllerUtils.TryGetGroundHit(out _, transform, col, groundLayer, climbableLayer,
+        private bool IsGrounded() =>
+            CharacterControllerUtils.TryGetGroundHit(out _, transform, col, groundLayer, climbableLayer,
                 slopeLimit, groundDistance);
-        }
 
         private bool IsOnMovingPlatform()
         {
