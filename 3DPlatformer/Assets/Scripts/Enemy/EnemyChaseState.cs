@@ -10,7 +10,7 @@ namespace Platformer
         private readonly Transform player;
         private readonly float sprintSpeed = 2.0f;
 
-        public EnemyChaseState(Enemy enemy, Animator animator, NavMeshAgent agent, Transform player) : base(enemy, animator)
+        public EnemyChaseState(EnemyBase enemyBase, Animator animator, NavMeshAgent agent, Transform player) : base(enemyBase, animator)
         {
             this.agent = agent;
             this.player = player;

@@ -6,4 +6,6 @@
  * How to create a LinkedList from scratch using C# and Visual Studio, 2021. Gen Grievous. [YouTube video] Available at: <https://www.youtube.com/watch?v=8TGFk_zUS9A> [Accessed 6 May 2026].
  * 1st AND 3RD PERSON CONTROLLER - COMPLETE COURSE (Part 2), 2024. spaderdabomb. [YouTube video] Available at: <https://www.youtube.com/watch?v=PIFQbxMgT0c> [Accessed 6 May 2026].
  * Stylized Core by Z, 2026. Stylized Player Character (Free). Stylized Core <https://stylizedcore.artstation.com/> [Accessed 6 May 2026].
+ 
+ https://www.youtube.com/watch?v=1Ymn86ffrBU&list=PLBEm2Vv2nD-MFxyeYuPgPGzkpYJv-nQGI&index=5
  */

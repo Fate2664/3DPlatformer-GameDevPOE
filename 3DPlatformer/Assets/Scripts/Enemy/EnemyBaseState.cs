@@ -5,7 +5,7 @@ namespace Platformer
     //This is the base enemy state. All enemy states will inherit from this class
     public abstract class EnemyBaseState : IState
     {
-        protected readonly Enemy enemy;
+        protected readonly EnemyBase EnemyBase;
         protected readonly Animator animator;
         
         //Get animation hashes 
@@ -17,9 +17,9 @@ namespace Platformer
         
         protected const float crossFadeDuration = 0.2f;
 
-        protected EnemyBaseState(Enemy enemy, Animator animator)
+        protected EnemyBaseState(EnemyBase enemyBase, Animator animator)
         {
-            this.enemy = enemy;
+            this.EnemyBase = enemyBase;
             this.animator = animator;
         }
         

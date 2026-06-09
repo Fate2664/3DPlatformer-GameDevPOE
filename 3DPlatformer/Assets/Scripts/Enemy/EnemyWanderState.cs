@@ -13,7 +13,7 @@ namespace Platformer
         
         private Node<Transform> currentPoint;
 
-        public EnemyWanderState(Enemy enemy, Animator animator, NavMeshAgent agent, LinkedListBase<Transform> wanderPoints) : base(enemy, animator)
+        public EnemyWanderState(EnemyBase enemyBase, Animator animator, NavMeshAgent agent, LinkedListBase<Transform> wanderPoints) : base(enemyBase, animator)
         {
             this.agent = agent;
             this.wanderPoints = wanderPoints;

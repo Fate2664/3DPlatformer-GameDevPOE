@@ -9,7 +9,7 @@ namespace Platformer
         private readonly NavMeshAgent agent;
         private readonly Transform player;
 
-        public EnemyAttackState(Enemy enemy, Animator animator, NavMeshAgent agent, Transform player) : base(enemy, animator)
+        public EnemyAttackState(EnemyBase enemyBase, Animator animator, NavMeshAgent agent, Transform player) : base(enemyBase, animator)
         {
             this.agent = agent;
             this.player = player;
@@ -24,7 +24,7 @@ namespace Platformer
         public override void Update()
         {
             agent.SetDestination(player.position);
-            enemy.Attack();
+            EnemyBase.Attack();
         }
     }
 }
