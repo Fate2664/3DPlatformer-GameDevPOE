@@ -6,6 +6,7 @@ TagManager:
   tags:
   - RespawnCollider
   - MovingPlatform
+  - InteractionTrigger
   layers:
   - Default
   - TransparentFX

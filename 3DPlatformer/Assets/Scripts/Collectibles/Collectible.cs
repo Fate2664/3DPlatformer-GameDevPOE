@@ -2,18 +2,19 @@
 
 namespace Platformer
 {
-    //This script is to check when the player walks over a collectible -> in this case a coin
+    //Collects the configured collectible data when the player enters its trigger.
     public class Collectible : Entity
     {
         [SerializeField] private CollectibleData collectibleData;
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!other.CompareTag("Player") || !other.TryGetComponent(out PlayerStats playerStats))
+            PlayerController player = other.GetComponentInParent<PlayerController>();
+            if (player == null || collectibleData == null)
                 return;
-            
-            collectibleData.IncrementScore(playerStats);
-            Destroy(gameObject);
+
+            if (collectibleData.TryCollect(player))
+                Destroy(gameObject);
         }
     }
 }

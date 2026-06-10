@@ -18,7 +18,7 @@ namespace Platformer
         public bool SprintToggledOn { get; private set; }
         public bool JumpPressed { get; private set; }
         public bool NextPressed { get; private set; }
-
+        public bool InteractPressed { get; private set; }
         #endregion
 
         #region Startup & Update Methods
@@ -47,6 +47,7 @@ namespace Platformer
         {
             JumpPressed = false;
             NextPressed = false;
+            InteractPressed = false;
         }
         #endregion
 
@@ -84,6 +85,12 @@ namespace Platformer
             {
                 SprintToggledOn = !holdToSprint && SprintToggledOn;
             }
+        }
+
+        public void OnInteract(InputAction.CallbackContext context)
+        {
+            if (!context.performed) return;
+            InteractPressed = true;
         }
 
         public void OnLook(InputAction.CallbackContext context)

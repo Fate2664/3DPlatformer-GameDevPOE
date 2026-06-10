@@ -10,15 +10,19 @@ namespace Platformer
         [SerializeField] private Vector3 moveTo = Vector3.zero;
         [SerializeField] private float moveTime = 1f;
         [SerializeField] private Ease ease = Ease.InOutQuad;
+        [SerializeField] private bool startMovingOnStart = true;
         
         private Vector3 startPosition;
-        private Vector3 lastPosition; 
+        private Vector3 lastPosition;
+        private bool isMoving;
             
         private void Start()
         {
             startPosition = transform.position;
             lastPosition = startPosition;
-            Move();
+
+            if (startMovingOnStart)
+                Activate();
         }
 
         private void FixedUpdate()
@@ -26,8 +30,12 @@ namespace Platformer
             lastPosition = transform.position;
         }
 
-        private void Move()
+        public void Activate()
         {
+            if (isMoving)
+                return;
+
+            isMoving = true;
             transform.DOMove(startPosition + moveTo, moveTime).SetEase(ease).SetLoops(-1, LoopType.Yoyo);
         }
     }
