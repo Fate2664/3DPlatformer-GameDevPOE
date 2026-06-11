@@ -7,8 +7,13 @@ public class IndicatorManager : MonoBehaviour
 {
     [SerializeField] private float scaleDuration = 0.5f;
     [SerializeField] private float height = 1.0f;
+    [SerializeField] private bool floating = true;
+    
+    [HideInInspector]
     public Sprite icon;
-
+    [HideInInspector]
+    public Material iconMaterial;
+    
     private SpriteRenderer renderer;
     private Vector3 startScale;
 
@@ -22,7 +27,10 @@ public class IndicatorManager : MonoBehaviour
     void Start()
     {
         transform.localScale = Vector3.zero;
-        transform.DOLocalMoveY(height, 1f).SetLoops(-1,  LoopType.Yoyo).SetEase(Ease.InOutQuad);
+        if (floating)
+        {
+            transform.DOLocalMoveY(height, 1f).SetLoops(-1,  LoopType.Yoyo).SetEase(Ease.InOutQuad);
+        }
     }
 
     public void ShowIndictor()
@@ -30,6 +38,11 @@ public class IndicatorManager : MonoBehaviour
         if (icon != null)
         {
             renderer.sprite = icon;
+        }
+
+        if (iconMaterial != null)
+        {
+            renderer.material = iconMaterial;
         }
         transform.DOScale(startScale, scaleDuration).SetEase(Ease.OutCubic);
     }
