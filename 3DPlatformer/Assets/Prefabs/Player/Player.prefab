@@ -113,6 +113,8 @@ GameObject:
   - component: {fileID: 4673761845898404283}
   - component: {fileID: 6083620816332835323}
   - component: {fileID: 5550067476818754900}
+  - component: {fileID: 1276787538691019047}
+  - component: {fileID: 2750304539573870492}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -299,6 +301,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.Respawner
   startRespawnPoint: {fileID: 0}
+--- !u!114 &1276787538691019047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 141838368315333010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7ca62b8d1df41a49b9ad8d2944e95d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platformer.PlayerInventory
+  keyUI: {fileID: 0}
+--- !u!114 &2750304539573870492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 141838368315333010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e36670a618df3944b35754e00f61d64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteractionDetector
+  input: {fileID: 6379786909048239278}
 --- !u!1 &455115253866708079
 GameObject:
   m_ObjectHideFlags: 0

@@ -152,7 +152,7 @@ Material:
     - _Coverage_Normal_Strength: 1
     - _Coverage_Smoothness: 0
     - _Cull: 2
-    - _Custom_Color: 0
+    - _Custom_Color: 1
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
@@ -196,7 +196,7 @@ Material:
     - _ZWriteControl: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Bottom_Color: {r: 1, g: 1, b: 1, a: 0}
+    - _Bottom_Color: {r: 0.6132076, g: 0.516288, b: 0.18801177, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Coverage_Color: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
