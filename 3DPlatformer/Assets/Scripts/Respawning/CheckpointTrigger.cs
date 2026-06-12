@@ -16,6 +16,9 @@ namespace Platformer
                 return;
             
             respawner.RegisterCheckpoint(checkpointId, spawnPoint);
+            
+            //Play SFX
+            SoundEffectsManager.Instance.Play("Checkpoint");
         }
     }
 }

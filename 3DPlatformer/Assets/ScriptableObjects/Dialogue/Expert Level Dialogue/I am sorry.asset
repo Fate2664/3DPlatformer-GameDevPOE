@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueBase
   DialogueName: You
   DialogueText:
-  - Sarah I am sorry.
+  - Sarah I am sorry. I remember now.
   - It was my fault. I didn't save you. I chose not to...
   - 'Now I must live with my mistakes. I will be different. I will change. I have
     to. '

@@ -61,6 +61,9 @@ namespace Platformer
             //Respawn to last checkpoint
             playerStats.DecrementLives();
             respawnable.RespawnAt(checkpointHistory.Peek());
+            
+            //Play SFX
+            SoundEffectsManager.Instance.Play("Death");
         }
 
         private void ResetRunToStart()

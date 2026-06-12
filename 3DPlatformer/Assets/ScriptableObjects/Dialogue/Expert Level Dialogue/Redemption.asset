@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1af72774d70ff54d814ead2dc30a07d, type: 3}
   m_Name: Redemption
   m_EditorClassIdentifier: Assembly-CSharp::DialogueBase
-  DialogueName: Heron
+  DialogueName: Cat
   DialogueText:
-  - 'All you can do now is be the man you want to be for the time you have left. '
+  - 'All you can do now is be the man you need to be for the time you have left. '

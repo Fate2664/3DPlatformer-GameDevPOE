@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 373097934223604295}
   - component: {fileID: 2352823546087923968}
+  - component: {fileID: 2136715275911352381}
   m_Layer: 0
   m_Name: Cat
   m_TagString: Untagged
@@ -47,6 +48,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.SpawnEffects
   spawnVFX: {fileID: 0}
   animationDuration: 1
+--- !u!114 &2136715275911352381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3151852340419397413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78e29623813d7144b9d767bb89b65e11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platformer.Cat
 --- !u!1001 &858158260662751804
 PrefabInstance:
   m_ObjectHideFlags: 0

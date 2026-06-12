@@ -10,6 +10,8 @@ namespace Platformer
         {
             var playerStats = player.GetComponent<PlayerStats>();
             playerStats.IncrementScore(score);
+            //Play SFX
+            SoundEffectsManager.Instance.Play("CoinCollect");
             return true;
         }
     }

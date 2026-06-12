@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1af72774d70ff54d814ead2dc30a07d, type: 3}
   m_Name: Final obstacle
   m_EditorClassIdentifier: Assembly-CSharp::DialogueBase
-  DialogueName: Heron
+  DialogueName: Cat
   DialogueText:
   - One final obstacle...
-  - 'Don''t let them surround you. Remember, your memeory is not your enemy. Let
-    it guide you through them.  '
+  - 'Don''t let it catch you. Remember, your memory is not your enemy. Let it guide
+    you through them.  '

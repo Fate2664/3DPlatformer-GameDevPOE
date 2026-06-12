@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueBase
   DialogueName: You
   DialogueText:
-  - Thanks for the guidance Heron...
-  - Heron?
+  - Thanks for the guidance Cat...
+  - Cat?
   - Where did he... I guess it was me all along.

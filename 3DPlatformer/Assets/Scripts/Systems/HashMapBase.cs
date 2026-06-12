@@ -35,7 +35,7 @@ namespace Platformer
             if (key == null) throw new ArgumentNullException(nameof(key));
             
             //Ensure the index is positive by masking out the sign
-            int hashCode = key.GetHashCode();
+            int hashCode = key.GetHashCode() & 0x7fffffff;
             return hashCode % capacity; 
         }
         
