@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace Platformer
 {
@@ -15,6 +16,7 @@ namespace Platformer
         public static SoundEffectsManager Instance { get; private set; }
         
         [SerializeField] private SoundEffect[] soundEffects;
+        [SerializeField] private AudioMixerGroup outputMixerGroup;
         
         private HashMapBase<string, AudioClip> soundMap;
         private AudioSource audioSource;
@@ -31,6 +33,11 @@ namespace Platformer
             DontDestroyOnLoad(gameObject);
             
             audioSource = GetComponent<AudioSource>();
+
+            if (outputMixerGroup != null)
+            {
+                audioSource.outputAudioMixerGroup = outputMixerGroup;
+            }
             soundMap = new HashMapBase<string, AudioClip>();
 
             foreach (SoundEffect soundEffect in soundEffects)

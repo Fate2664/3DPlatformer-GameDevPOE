@@ -19,6 +19,15 @@ namespace Platformer
         public bool JumpPressed { get; private set; }
         public bool NextPressed { get; private set; }
         public bool InteractPressed { get; private set; }
+        public bool PausePressed { get; private set; }
+        
+        //UI Actions
+        public event UnityAction<bool> Exit  =  delegate { };
+        public event UnityAction<bool> RestoreDefaults  =  delegate { };
+        public event UnityAction<bool> Apply  =  delegate { };
+        public event UnityAction<float> VerticalNav  =  delegate { };
+        public event UnityAction<float> HorizontalNav  =  delegate { };
+        public event UnityAction<float> TabNav = delegate { };
         #endregion
 
         #region Startup & Update Methods
@@ -48,6 +57,7 @@ namespace Platformer
             JumpPressed = false;
             NextPressed = false;
             InteractPressed = false;
+            PausePressed = false;
         }
         #endregion
 
@@ -93,6 +103,12 @@ namespace Platformer
             InteractPressed = true;
         }
 
+        public void OnPause(InputAction.CallbackContext context)
+        {
+            if (!context.performed) return;
+            PausePressed = true;
+        }
+
         public void OnLook(InputAction.CallbackContext context)
         {
             LookInput =  context.ReadValue<Vector2>();
@@ -105,7 +121,7 @@ namespace Platformer
 
         public void OnExit(InputAction.CallbackContext context)
         {
-            return;
+            Exit.Invoke(context.phase == InputActionPhase.Performed);
         }
 
         public void OnClick(InputAction.CallbackContext context)
@@ -125,14 +141,29 @@ namespace Platformer
             NextPressed = true;
         }
 
-        public void OnNavigate(InputAction.CallbackContext context)
+        public void OnRestoreDefaults(InputAction.CallbackContext context)
         {
-            return;
+            RestoreDefaults.Invoke(context.phase == InputActionPhase.Performed);
+        }
+
+        public void OnHorizontalNavigation(InputAction.CallbackContext context)
+        {
+            HorizontalNav.Invoke(context.ReadValue<float>());
+        }
+
+        public void OnVerticalNavigation(InputAction.CallbackContext context)
+        {
+            VerticalNav.Invoke(context.ReadValue<float>());
+        }
+
+        public void OnTabNavigation(InputAction.CallbackContext context)
+        {
+            TabNav.Invoke(context.ReadValue<float>());
         }
 
         public void OnApply(InputAction.CallbackContext context)
         {
-            return;
+            Apply.Invoke(context.phase == InputActionPhase.Performed);
         }
 
         #endregion

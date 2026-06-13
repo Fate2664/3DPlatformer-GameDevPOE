@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61aee88d6bccafb448ed32e5bbeaf318, type: 3}
+  m_Name: Audio
+  m_EditorClassIdentifier: Assembly-CSharp::SettingsCollection
+  Category: Audio
+  Settings:
+  - rid: 4730573224911044698
+  - rid: 4730573224911044699
+  - rid: 4730573224911044716
+  references:
+    version: 2
+    RefIds:
+    - rid: 4730573224911044698
+      type: {class: FloatSetting, ns: , asm: Assembly-CSharp}
+      data:
+        Key: MasterVolume
+        Name: Master
+        Order: 0
+        value: 45.76259
+        Min: 0
+        Max: 100
+        ValueFormat: '{0:0}'
+        DefaultValue: 50
+        category: 0
+    - rid: 4730573224911044699
+      type: {class: FloatSetting, ns: , asm: Assembly-CSharp}
+      data:
+        Key: MusicVolume
+        Name: Music
+        Order: 1
+        value: 50
+        Min: 0
+        Max: 100
+        ValueFormat: '{0:0}'
+        DefaultValue: 50
+        category: 0
+    - rid: 4730573224911044716
+      type: {class: FloatSetting, ns: , asm: Assembly-CSharp}
+      data:
+        Key: SoundEffectsVolume
+        Name: Sound Effects
+        Order: 2
+        value: 50
+        Min: 0
+        Max: 100
+        ValueFormat: '{0:0}'
+        DefaultValue: 50
+        category: 0
