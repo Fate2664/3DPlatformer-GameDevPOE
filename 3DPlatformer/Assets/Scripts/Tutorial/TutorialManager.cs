@@ -17,6 +17,8 @@ namespace Platformer
 
         private void Update()
         {
+            if (input == null) return;
+            
             if (input.NextPressed)
             {
                 tutorialBlock.gameObject.SetActive(false);

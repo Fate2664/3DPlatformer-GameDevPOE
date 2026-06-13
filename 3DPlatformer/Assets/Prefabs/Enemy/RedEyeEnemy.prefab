@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4816273154897246585}
   - component: {fileID: 2397602645690906119}
   - component: {fileID: -6967143365766971658}
-  - component: {fileID: 3969900608105950883}
+  - component: {fileID: 8505027428388584985}
   m_Layer: 0
   m_Name: RedEyeEnemy
   m_TagString: Untagged
@@ -113,7 +113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.SpawnEffects
   spawnVFX: {fileID: 0}
   animationDuration: 1
---- !u!114 &3969900608105950883
+--- !u!114 &8505027428388584985
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,11 +122,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 327829985000664238}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f967adab504748fab85f46dd9f6d0ab5, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f91136092e340b5aec56dd1035c3684, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Platformer.BossEnemy
+  m_EditorClassIdentifier: Assembly-CSharp::Platformer.CommonEnemy
   timeBetweenAttacks: 1
-  moveSpeed: 1
+  moveSpeed: 1.2
 --- !u!1001 &4236960477584665171
 PrefabInstance:
   m_ObjectHideFlags: 0

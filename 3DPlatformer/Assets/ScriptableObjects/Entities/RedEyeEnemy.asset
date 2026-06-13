@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fbe5c4ca44704346ac9d0eab59764d30, type: 3}
-  m_Name: GoldEnemy
+  m_Name: RedEyeEnemy
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.EnemyData
-  prefab: {fileID: 327829985000664238, guid: 40bdfaa7a80532e4ba8e42638fe42349, type: 3}
+  prefab: {fileID: 327829985000664238, guid: e4870cc98cb9f2b4bb6a1050841cc2cb, type: 3}
