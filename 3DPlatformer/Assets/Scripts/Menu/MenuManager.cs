@@ -2,6 +2,7 @@ using System;
 using DG.Tweening;
 using Nova;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 namespace Platformer
@@ -9,25 +10,17 @@ namespace Platformer
     public class MenuManager : MonoBehaviour
     {
         [SerializeField] private UIBlock2D settingsUI;
-        [SerializeField] private UIBlock2D pauseMenuUI;
-
-        public static MenuManager Instance { get; private set; }
-
-        private void Awake()
-        {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-
+        
+        
         public void LoadBeginnerLevel()
         {
             SceneManager.LoadScene("BeginnerLevel");
+        }
+
+        public void LoadMainMenu()
+        {
+            Time.timeScale = 1f;
+            SceneManager.LoadScene("MainMenu");
         }
 
         public void ShowSettings()
@@ -44,11 +37,6 @@ namespace Platformer
             
             settingsUI.transform.DOKill();
             settingsUI.transform.DOScale(0f, .3f).SetEase(Ease.OutQuad);
-        }
-
-        public void ShowPauseMenu()
-        {
-            
         }
     }
 }

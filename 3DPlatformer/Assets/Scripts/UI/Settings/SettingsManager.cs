@@ -10,7 +10,7 @@ public class SettingsManager : MonoBehaviour
     
     public SettingsCollection AudioCollection;
     public SettingsCollection VideoCollection;
-    public SettingsMenu Menu;
+    [NonSerialized] public SettingsMenu Menu;
 
     [Header("Audio")]
     [SerializeField] private AudioMixer audioMixer;

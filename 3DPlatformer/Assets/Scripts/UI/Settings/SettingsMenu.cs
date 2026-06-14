@@ -10,6 +10,7 @@ using Platformer;
 public class SettingsMenu : MonoBehaviour
 {
     public static SettingsMenu Instance;
+    public MenuManager MenuManager;
     public UIBlock Root = null;
     public InputReader gameInput = null;
     public PopupManager popup = null;
@@ -40,11 +41,12 @@ public class SettingsMenu : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
     {
+        SettingsManager.Instance.Menu = this;
+        
         //Visual
         Root.AddGestureHandler<Gesture.OnHover, StepperSettingVisuals>(StepperSettingVisuals.HandleHover);
         Root.AddGestureHandler<Gesture.OnUnhover, StepperSettingVisuals>(StepperSettingVisuals.HandleUnHover);
@@ -85,6 +87,15 @@ public class SettingsMenu : MonoBehaviour
         gameInput.RestoreDefaults += OnRestoreDefaults;
         gameInput.Apply += OnApply;
         gameInput.Exit += OnExit;
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
+
+        if (SettingsManager.Instance != null && SettingsManager.Instance.Menu == this)
+            SettingsManager.Instance.Menu = null;
     }
 
     private void FixedUpdate()
@@ -154,7 +165,7 @@ public class SettingsMenu : MonoBehaviour
         //IF they are then return to main menu 
         if (!HasUnsavedSettings())
         {
-            MenuManager.Instance.HideSettings();
+            MenuManager.HideSettings();
             return;
         }
 
@@ -202,7 +213,7 @@ public class SettingsMenu : MonoBehaviour
                 break;
             case PopupType.ExitSettings:
                 SettingsManager.Instance.LoadAllSettings();
-                MenuManager.Instance.HideSettings();
+                MenuManager.HideSettings();
                 break;
         }
     }

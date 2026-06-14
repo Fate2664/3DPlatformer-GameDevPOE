@@ -12,6 +12,7 @@ namespace Platformer
         [Header("References")] 
         [SerializeField] private Camera playerCamera;
         [SerializeField] private Transform playerRoot;
+        [SerializeField] private GameUIManager gameUIManager;
         
         //Base movement settings
         [Header("Movement Settings")] 
@@ -150,6 +151,12 @@ namespace Platformer
 
         private void Update()
         {
+            if (input.PausePressed)
+                gameUIManager.TogglePauseMenu();
+
+            if (gameUIManager.IsPaused)
+                return;
+
             //Update the target yaw and pitch for the camera
             targetYaw += lookSenseH * input.LookInput.x;
             targetPitch = Mathf.Clamp(targetPitch - lookSenseV * input.LookInput.y, -lookLimitV, lookLimitV);

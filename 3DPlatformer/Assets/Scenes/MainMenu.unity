@@ -5585,7 +5585,11 @@ PrefabInstance:
     - target: {fileID: 8307157983974727564, guid: 19feb4d30841ba04d89cf2eb0b4ab8d5, type: 3}
       propertyPath: gameInput
       value: 
-      objectReference: {fileID: 1395094915}
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307157983974727564, guid: 19feb4d30841ba04d89cf2eb0b4ab8d5, type: 3}
+      propertyPath: MenuManager
+      value: 
+      objectReference: {fileID: 910523833}
     - target: {fileID: 8307157983974727564, guid: 19feb4d30841ba04d89cf2eb0b4ab8d5, type: 3}
       propertyPath: 'SettingsCollection.Array.data[0]'
       value: 
@@ -5594,7 +5598,8 @@ PrefabInstance:
       propertyPath: 'SettingsCollection.Array.data[1]'
       value: 
       objectReference: {fileID: 11400000, guid: dca51476862d7c043a76b3a195dd5345, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8307157983974727564, guid: 19feb4d30841ba04d89cf2eb0b4ab8d5, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2373950190143164341, guid: 19feb4d30841ba04d89cf2eb0b4ab8d5, type: 3}
@@ -5604,9 +5609,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1083137276}
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 259172887189392470, guid: 19feb4d30841ba04d89cf2eb0b4ab8d5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1395094915}
     - targetCorrespondingSourceObject: {fileID: 6731521964005846642, guid: 19feb4d30841ba04d89cf2eb0b4ab8d5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 223561546}
@@ -25514,6 +25516,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6853804256271815431, guid: a22de254fda32184784881cbf3b484e1, type: 3}
   m_PrefabInstance: {fileID: 1134445923}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &300446433 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5594701317501311202, guid: 19feb4d30841ba04d89cf2eb0b4ab8d5, type: 3}
+  m_PrefabInstance: {fileID: 75905278}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e23569ec8e3ccb44f93ff9101c870fcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Nova::Nova.ListView
 --- !u!4 &301648624 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7087778213672153286, guid: 28e7215f7f3d4af479961532235129be, type: 3}
@@ -43395,6 +43408,53 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7087778213672153286, guid: 28e7215f7f3d4af479961532235129be, type: 3}
   m_PrefabInstance: {fileID: 1202602187}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &486879469
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 486879471}
+  - component: {fileID: 486879470}
+  m_Layer: 0
+  m_Name: SettingsManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &486879470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 486879469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b72ea9e0f302d4144be1626ed4051c44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SettingsManager
+  AudioCollection: {fileID: 11400000, guid: 5f912148e31848646b621aa00ce56d94, type: 2}
+  VideoCollection: {fileID: 11400000, guid: dca51476862d7c043a76b3a195dd5345, type: 2}
+  audioMixer: {fileID: 24100000, guid: 937df2ad6be38bf439c2918cfdfc8a38, type: 2}
+--- !u!4 &486879471
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 486879469}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -109.11963, y: -4.4, z: 123.45328}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &487374126 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7087778213672153286, guid: 28e7215f7f3d4af479961532235129be, type: 3}
@@ -67017,6 +67077,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7087778213672153286, guid: 28e7215f7f3d4af479961532235129be, type: 3}
   m_PrefabInstance: {fileID: 569605768}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &737693257 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4847703660684280518, guid: 19feb4d30841ba04d89cf2eb0b4ab8d5, type: 3}
+  m_PrefabInstance: {fileID: 75905278}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e23569ec8e3ccb44f93ff9101c870fcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Nova::Nova.ListView
 --- !u!4 &738121214 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7087778213672153286, guid: 28e7215f7f3d4af479961532235129be, type: 3}
@@ -84156,7 +84227,7 @@ GameObject:
   m_Component:
   - component: {fileID: 910523831}
   - component: {fileID: 910523833}
-  - component: {fileID: 910523832}
+  - component: {fileID: 910523834}
   m_Layer: 0
   m_Name: MenuManager
   m_TagString: Untagged
@@ -84179,22 +84250,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &910523832
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 910523829}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b72ea9e0f302d4144be1626ed4051c44, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SettingsManager
-  AudioCollection: {fileID: 11400000, guid: 5f912148e31848646b621aa00ce56d94, type: 2}
-  VideoCollection: {fileID: 11400000, guid: dca51476862d7c043a76b3a195dd5345, type: 2}
-  Menu: {fileID: 1395094916}
-  audioMixer: {fileID: 24100000, guid: 937df2ad6be38bf439c2918cfdfc8a38, type: 2}
 --- !u!114 &910523833
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84208,6 +84263,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.MenuManager
   settingsUI: {fileID: 223561544}
+--- !u!114 &910523834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 910523829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4253f70468ef1e459dbfb01b2c44d94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platformer.InputReader
+  holdToSprint: 1
 --- !u!1001 &911166909
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -96978,6 +97046,59 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4131797673540345160, guid: 4a90c748d8d93494094f36108f5f261a, type: 3}
   m_PrefabInstance: {fileID: 1049831684}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1050305162
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1050305164}
+  - component: {fileID: 1050305163}
+  m_Layer: 0
+  m_Name: SettingsMenuController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1050305163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1050305162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6d09129c3578ac4e90fc017a0d078b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SettingsMenu
+  MenuManager: {fileID: 910523833}
+  Root: {fileID: 1395094928}
+  gameInput: {fileID: 910523834}
+  popup: {fileID: 1099013244}
+  SettingsCollection:
+  - {fileID: 11400000, guid: 5f912148e31848646b621aa00ce56d94, type: 2}
+  - {fileID: 11400000, guid: dca51476862d7c043a76b3a195dd5345, type: 2}
+  TabBar: {fileID: 737693257}
+  SettingsList: {fileID: 300446433}
+--- !u!4 &1050305164
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1050305162}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -109.11973, y: -4.4, z: 123.45324}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1051076732
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -101862,6 +101983,17 @@ MonoBehaviour:
     SortingOrder: 2
     RenderQueue: 3000
     RenderOverOpaqueGeometry: 0
+--- !u!114 &1099013244 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5882425120869618603, guid: 19feb4d30841ba04d89cf2eb0b4ab8d5, type: 3}
+  m_PrefabInstance: {fileID: 75905278}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1099013235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24b09d862482e4c438554facc1ca6636, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PopupManager
 --- !u!1001 &1099277987
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -130581,40 +130713,22 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 28e7215f7f3d4af479961532235129be, type: 3}
---- !u!1 &1395094914 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 259172887189392470, guid: 19feb4d30841ba04d89cf2eb0b4ab8d5, type: 3}
-  m_PrefabInstance: {fileID: 75905278}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1395094915
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1395094914}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4253f70468ef1e459dbfb01b2c44d94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Platformer.InputReader
-  holdToSprint: 1
---- !u!114 &1395094916 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8307157983974727564, guid: 19feb4d30841ba04d89cf2eb0b4ab8d5, type: 3}
-  m_PrefabInstance: {fileID: 75905278}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1395094914}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6d09129c3578ac4e90fc017a0d078b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SettingsMenu
 --- !u!4 &1395094923 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2373950190143164341, guid: 19feb4d30841ba04d89cf2eb0b4ab8d5, type: 3}
   m_PrefabInstance: {fileID: 75905278}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1395094928 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4273085944567133245, guid: 19feb4d30841ba04d89cf2eb0b4ab8d5, type: 3}
+  m_PrefabInstance: {fileID: 75905278}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bed4401130c3b04193ec5a2e02ee773, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Nova::Nova.UIBlock
 --- !u!1001 &1395216896
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -204876,6 +204990,8 @@ SceneRoots:
   m_Roots:
   - {fileID: 1486787393}
   - {fileID: 1602237147}
+  - {fileID: 486879471}
+  - {fileID: 1050305164}
   - {fileID: 910523831}
   - {fileID: 1314847670}
   - {fileID: 75905278}
