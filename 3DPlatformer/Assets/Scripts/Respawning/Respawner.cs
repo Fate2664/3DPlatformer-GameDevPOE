@@ -63,7 +63,7 @@ namespace Platformer
             respawnable.RespawnAt(checkpointHistory.Peek());
             
             //Play SFX
-            SoundEffectsManager.Instance.Play("Death");
+            AudioManager.Instance.Play("Death");
         }
 
         private void ResetRunToStart()

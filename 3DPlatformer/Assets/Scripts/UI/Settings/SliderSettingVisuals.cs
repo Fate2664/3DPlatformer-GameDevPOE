@@ -1,5 +1,6 @@
 using DG.Tweening;
 using Nova;
+using Platformer;
 using UnityEngine;
 
 public class SliderSettingVisuals : ItemVisuals
@@ -27,7 +28,8 @@ public class SliderSettingVisuals : ItemVisuals
     public static void HandleHover(Gesture.OnHover evt, SliderSettingVisuals target)
     {
         if (SettingsMenu.Instance.popup.IsOpen) return;
-
+        
+        AudioManager.Instance.Play("HoverSound");
         target.MainBackground.DOKill();
         target.MainBackground.transform.DOScale(target.SettingLabel.transform.localScale * HoverScale, 0.15f).SetEase(Ease.OutBack);
         target.isSelected = true;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Platformer;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
@@ -7,13 +8,10 @@ using UnityEngine.SceneManagement;
 public class SettingsManager : MonoBehaviour
 {
     public static SettingsManager Instance;
-    
+
     public SettingsCollection AudioCollection;
     public SettingsCollection VideoCollection;
     [NonSerialized] public SettingsMenu Menu;
-
-    [Header("Audio")]
-    [SerializeField] private AudioMixer audioMixer;
 
     private Dictionary<string, Setting> settingsLookup;
 
@@ -37,7 +35,14 @@ public class SettingsManager : MonoBehaviour
     private void Start()
     {
         SubscribeToSettings();
-        ApplyAllAudioSettings();
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance != this) return;
+
+        UnsubscribeFromSettings();
+        Instance = null;
     }
     
     private void AddSettingsFromCollection(SettingsCollection collection)
@@ -77,6 +82,8 @@ public class SettingsManager : MonoBehaviour
 
     private void UnsubscribeFromSettings()
     {
+        if (settingsLookup == null) return;
+
         foreach (Setting setting in settingsLookup.Values)
         {
             switch (setting)
@@ -140,12 +147,12 @@ public class SettingsManager : MonoBehaviour
     public bool ParticEnabled => GetBool("ParticlesEnabled", true);
     public int Difficulty => GetInt("Difficulty", 0);
     public float MasterVolume => GetFloat("MasterVolume", 1f);
-    public float MusicVolume => GetFloat("Music", 1f);
-    public float EffectsVolume => GetFloat("Effects", 1f);
+    public float MusicVolume => GetFloat("MusicVolume", 1f);
+    public float EffectsVolume => GetFloat("SoundEffectsVolume", 1f);
+    public float MenuVolume => GetFloat("MenuVolume", 1f);
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        ApplyAllAudioSettings();
     }
 
     #region HandleSettings
@@ -158,7 +165,6 @@ public class SettingsManager : MonoBehaviour
         }
 
         PlayerPrefs.Save();
-        ApplyAllAudioSettings();
         Menu?.SettingsList?.Refresh();
     }
 
@@ -173,7 +179,6 @@ public class SettingsManager : MonoBehaviour
                 case MultiOptionSetting multiOptionSetting: multiOptionSetting.Load(); break;
             }
         }
-        ApplyAllAudioSettings();
         Menu?.SettingsList?.Refresh();
     }
 
@@ -199,7 +204,7 @@ public class SettingsManager : MonoBehaviour
             switch (floatSetting.category)
             {
                 case Setting.SettingCategory.Audio:
-                    ApplyAudioSetting(floatSetting);
+                    AudioManager.Instance?.UpdateAllVolumes();
                     break;
             }
         }
@@ -211,28 +216,6 @@ public class SettingsManager : MonoBehaviour
         {
             
         }
-    }
-
-    private void ApplyAllAudioSettings()
-    {
-        foreach (Setting setting in settingsLookup.Values)
-        {
-            if (setting is FloatSetting floatSetting &&
-                floatSetting.category == Setting.SettingCategory.Audio)
-            {
-                ApplyAudioSetting(floatSetting);
-            }
-        }
-    }
-
-    private void ApplyAudioSetting(FloatSetting setting)
-    {
-        float normalizedVolume = Mathf.InverseLerp(setting.Min, setting.Max, setting.Value);
-        float volumeDb = normalizedVolume <= 0.0001f
-            ? -80f  //Muted volume
-            : Mathf.Log10(normalizedVolume) * 20f;
-
-        audioMixer.SetFloat(setting.Key, volumeDb);
     }
 
     #endregion

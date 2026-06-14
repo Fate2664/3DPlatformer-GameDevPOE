@@ -17,6 +17,7 @@ MonoBehaviour:
   - rid: 4730573224911044698
   - rid: 4730573224911044699
   - rid: 4730573224911044716
+  - rid: 4730573249206288482
   references:
     version: 2
     RefIds:
@@ -26,7 +27,7 @@ MonoBehaviour:
         Key: MasterVolume
         Name: Master
         Order: 0
-        value: 45.76259
+        value: 100
         Min: 0
         Max: 100
         ValueFormat: '{0:0}'
@@ -38,7 +39,7 @@ MonoBehaviour:
         Key: MusicVolume
         Name: Music
         Order: 1
-        value: 50
+        value: 51.43636
         Min: 0
         Max: 100
         ValueFormat: '{0:0}'
@@ -50,7 +51,19 @@ MonoBehaviour:
         Key: SoundEffectsVolume
         Name: Sound Effects
         Order: 2
-        value: 50
+        value: 100
+        Min: 0
+        Max: 100
+        ValueFormat: '{0:0}'
+        DefaultValue: 50
+        category: 0
+    - rid: 4730573249206288482
+      type: {class: FloatSetting, ns: , asm: Assembly-CSharp}
+      data:
+        Key: MenuVolume
+        Name: Menu Volume
+        Order: 3
+        value: 100
         Min: 0
         Max: 100
         ValueFormat: '{0:0}'

@@ -62,7 +62,8 @@ namespace Platformer
             {
                 buttonLabel.Color = hoverTextColor;
             }
-
+            
+            AudioManager.Instance.Play("HoverSound");
             AnimateScale(defaultScale * hoverScale, Ease.OutBack);
         }
 
@@ -81,6 +82,7 @@ namespace Platformer
 
         private void HandlePress(Gesture.OnPress evt)
         {
+            AudioManager.Instance.Play("ClickSound");
             AnimateScale(defaultScale * pressedScale, Ease.OutQuad);
         }
 

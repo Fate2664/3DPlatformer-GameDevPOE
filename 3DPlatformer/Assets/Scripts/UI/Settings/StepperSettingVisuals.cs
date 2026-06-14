@@ -1,5 +1,6 @@
 using DG.Tweening;
 using Nova;
+using Platformer;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
@@ -94,7 +95,8 @@ public class StepperSettingVisuals : ItemVisuals
     internal static void HandleHover(Gesture.OnHover evt, StepperSettingVisuals target)
     {
         if (SettingsMenu.Instance.popup.IsOpen) return;
-
+        
+        AudioManager.Instance.Play("HoverSound");
         target.Background.DOKill();
         target.Background.transform.DOScale(target.SettingLabel.transform.localScale * HoverScale, 0.15f)
             .SetEase(Ease.OutBack);
@@ -115,6 +117,7 @@ public class StepperSettingVisuals : ItemVisuals
         if (SettingsMenu.Instance.popup.IsOpen) return;
 
         //Play SFX
+        AudioManager.Instance.Play("ClickSound");
     }
 
     private void UpdateValue()

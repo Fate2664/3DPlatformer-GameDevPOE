@@ -7,7 +7,7 @@ namespace Platformer
     {
         private void Start()
         {
-            SoundEffectsManager.Instance.Play("StartLevel");
+            AudioManager.Instance.Play("StartLevel");
         }
     }
 }

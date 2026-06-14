@@ -43439,7 +43439,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SettingsManager
   AudioCollection: {fileID: 11400000, guid: 5f912148e31848646b621aa00ce56d94, type: 2}
   VideoCollection: {fileID: 11400000, guid: dca51476862d7c043a76b3a195dd5345, type: 2}
-  audioMixer: {fileID: 24100000, guid: 937df2ad6be38bf439c2918cfdfc8a38, type: 2}
 --- !u!4 &486879471
 Transform:
   m_ObjectHideFlags: 0
@@ -60125,6 +60124,100 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7733339445370539989, guid: eae282ced33b74140b668fb902af6d44, type: 3}
   m_PrefabInstance: {fileID: 1758828253}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &659465203
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 659465205}
+  - component: {fileID: 659465204}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &659465204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 659465203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0d7e2b7dcdacbf41bb7836094a56893, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platformer.SoundEffectsManager
+  sounds:
+  - key: HoverSound
+    clip: {fileID: 8300000, guid: bd862c8c61bd7844293a4d266fa93c46, type: 3}
+    volume: 0.252
+    pitch: 1.08
+    loop: 0
+    category: 3
+    source: {fileID: 0}
+  - key: ClickSound
+    clip: {fileID: 8300000, guid: 0e7c708c784650449a16bcaeaf9523de, type: 3}
+    volume: 0.129
+    pitch: 0.67
+    loop: 0
+    category: 3
+    source: {fileID: 0}
+  - key: Death
+    clip: {fileID: 8300000, guid: cabfae866cab347928b74b7d0ca6bfa9, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    category: 2
+    source: {fileID: 0}
+  - key: StartLevel
+    clip: {fileID: 8300000, guid: a0ca8964c08d54c5dbebf245bdc474ca, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    category: 2
+    source: {fileID: 0}
+  - key: CoinCollect
+    clip: {fileID: 8300000, guid: ffb159a21c8a04135a5616979c828fab, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    category: 2
+    source: {fileID: 0}
+  - key: Checkpoint
+    clip: {fileID: 8300000, guid: 657578e4be6b64dbf9b09deada272e55, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    category: 2
+    source: {fileID: 0}
+  - key: MenuMusic
+    clip: {fileID: 8300000, guid: 406dec6bf579a4643ab6661b8cfeb11e, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    category: 1
+    source: {fileID: 0}
+--- !u!4 &659465205
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 659465203}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -127.27243, y: -4.4, z: 126.39809}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &659555339
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -204990,6 +205083,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 1486787393}
   - {fileID: 1602237147}
+  - {fileID: 659465205}
   - {fileID: 486879471}
   - {fileID: 1050305164}
   - {fileID: 910523831}
