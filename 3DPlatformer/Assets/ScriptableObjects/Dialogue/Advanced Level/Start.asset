@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueBase
   DialogueName: Cat
   DialogueText:
-  - 'Ok. This will be more difficult to overcome but you have to face your fears
-    in order to remember what happened. '
-  - I know you can do it.
+  - 'You are doing great, you will need to look into your past in order to remember
+    what happened. '
+  - Now keep moving forward.

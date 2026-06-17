@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueBase
   DialogueName: You
   DialogueText:
-  - This place... I've been here before.
-  - The water feels familier.
+  - This feels familar but also strange.
+  - This wind makes me uneasy.

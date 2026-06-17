@@ -94,7 +94,7 @@ PrefabInstance:
     - target: {fileID: 3015586344206255124, guid: a73eca55382651c449497eca9a2be0be, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: d6460ff0d5758d345849b384cab6830b, type: 2}
+      objectReference: {fileID: 2100000, guid: 480ff10b8f07ada4ba24fb408dc02401, type: 2}
     - target: {fileID: 3664100224609117633, guid: a73eca55382651c449497eca9a2be0be, type: 3}
       propertyPath: m_Name
       value: StarCoin

@@ -9,3 +9,17 @@
  
  https://www.youtube.com/watch?v=1Ymn86ffrBU&list=PLBEm2Vv2nD-MFxyeYuPgPGzkpYJv-nQGI&index=5
  */
+
+/*
+ *   Generic Graph Data Structure Implementation in C#, 2021. TechWebDots. [YouTube video] Available at: https://www.youtube.com/watch?v=1Ymn86ffrBU&list=PLBEm2Vv2nD-MFxyeYuPgPGzkpYJv-nQGI&index=5 [Accessed 17 June 2026].
+ *
+ *   Nimble Fox, 2025. Meadow Forest Props - Low Poly Model Pack. Nimble Fox https://nimblefox.ai/ [Accessed 17 June 2026].
+ *   Jean Moreno, 2025. Cartoon FX Remaster Free. Jean Moreno https://www.jeanmoreno.com/ [Accessed 17 June 2026].
+ *   DanProps, 2024. Space Game GUI kit. DanProps https://dribbble.com/DanProps [Accessed 17 June 2026].
+ *   Dustyroom, 2024. FREE Casual Game SFX Pack. Dustyroom https://dustyroom.com/ [Accessed 17 June 2026].
+ *   ANIMPIC STUDIO, 2024. POLY - Lite Survial Collection. animpic https://www.animpic.studio/ [Accessed 17 June 2026].
+ *   Cry Of Fear, 2015. Andreas Ronnburg. Crow https://www.youtube.com/watch?v=Pm9AjfbdL24&list=OLAK5uy_mzlJ1mULywIvS1GMUytHmITZSgHz7TEMQ&index=2 [Accessed 17 June 2026].
+ *    Cry Of Fear, 2015. Andreas Ronnburg. Dark City https://www.youtube.com/watch?v=OKe99lVLuQo&list=OLAK5uy_mzlJ1mULywIvS1GMUytHmITZSgHz7TEMQ&index=1 [Accessed 17 June 2026].
+ *    Cry Of Fear, 2015. Andreas Ronnburg. Hate Life https://www.youtube.com/watch?v=B4PBffQZpFQ&list=OLAK5uy_mzlJ1mULywIvS1GMUytHmITZSgHz7TEMQ&index=17 [Accessed 17 June 2026].
+ *    Cry Of Fear, 2015. Andreas Ronnburg. Sophie https://www.youtube.com/watch?v=u0nhOXV9wFM&list=OLAK5uy_mzlJ1mULywIvS1GMUytHmITZSgHz7TEMQ&index=32 [Accessed 17 June 2026].
+ */

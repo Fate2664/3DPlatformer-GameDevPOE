@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueBase
   DialogueName: You
   DialogueText:
-  - This water... it looks familier.
+  - This water... it feels familier.
