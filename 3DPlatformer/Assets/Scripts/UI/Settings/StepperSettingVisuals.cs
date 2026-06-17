@@ -128,7 +128,7 @@ public class StepperSettingVisuals : ItemVisuals
             return;
         }
 
-        ValueLabel.Text = DataSource.Options[DataSource.SelectedIndex];
+        ValueLabel.Text = DataSource.CurrentSelection;
     }
     
     private void HandleLeftArrowClicked(Gesture.OnClick evt)

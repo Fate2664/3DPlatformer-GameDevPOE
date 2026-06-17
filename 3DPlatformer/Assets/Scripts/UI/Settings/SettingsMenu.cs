@@ -488,8 +488,13 @@ public class SettingsMenu : MonoBehaviour
     private void BindStepperSetting(Data.OnBind<StepperSetting> evt, StepperSettingVisuals target, int index)
     {
         StepperSetting setting = evt.UserData;
-        target.SettingLabel.Text = evt.UserData.Name;
-        target.Initialize(evt.UserData, index);
+        if (setting is ResolutionSetting resolutionSetting)
+        {
+            resolutionSetting.Initialize();
+        }
+
+        target.SettingLabel.Text = setting.Name;
+        target.Initialize(setting, index);
     }
 
     private void UnbindStepperSetting(Data.OnUnbind<StepperSetting> evt, StepperSettingVisuals target, int index)

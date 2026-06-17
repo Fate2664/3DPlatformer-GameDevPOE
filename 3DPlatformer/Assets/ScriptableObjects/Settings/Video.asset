@@ -16,40 +16,28 @@ MonoBehaviour:
   Settings:
   - rid: 4730573224911044700
   - rid: 4730573224911044701
-  - rid: 4730573224911044702
   references:
     version: 2
     RefIds:
     - rid: 4730573224911044700
-      type: {class: StepperSetting, ns: , asm: Assembly-CSharp}
+      type: {class: ResolutionSetting, ns: , asm: Assembly-CSharp}
       data:
-        Key: GraphicsPreset
-        Name: Graphics Preset
-        Order: 1
+        Key: Resolution
+        Name: Resolution
+        Order: 0
         category: 1
-        Options:
-        - Low
-        - Medium
-        - High
-        - Epic
-        DefaultIndex: 2
+        Options: []
+        DefaultIndex: 0
+        Resolutions: []
     - rid: 4730573224911044701
       type: {class: StepperSetting, ns: , asm: Assembly-CSharp}
       data:
         Key: RenderMode
         Name: Render Mode
-        Order: 0
+        Order: 1
         category: 1
         Options:
         - Windowed
         - Windowed Borderless
         - Fullscreen
         DefaultIndex: 2
-    - rid: 4730573224911044702
-      type: {class: BoolSetting, ns: , asm: Assembly-CSharp}
-      data:
-        Key: ParticleEffects
-        Name: Particle Effects
-        Order: 2
-        DefaultState: 1
-        category: 1
