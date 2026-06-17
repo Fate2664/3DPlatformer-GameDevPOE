@@ -6,6 +6,12 @@
  * How to create a LinkedList from scratch using C# and Visual Studio, 2021. Gen Grievous. [YouTube video] Available at: <https://www.youtube.com/watch?v=8TGFk_zUS9A> [Accessed 6 May 2026].
  * 1st AND 3RD PERSON CONTROLLER - COMPLETE COURSE (Part 2), 2024. spaderdabomb. [YouTube video] Available at: <https://www.youtube.com/watch?v=PIFQbxMgT0c> [Accessed 6 May 2026].
  * Stylized Core by Z, 2026. Stylized Player Character (Free). Stylized Core <https://stylizedcore.artstation.com/> [Accessed 6 May 2026].
- 
- https://www.youtube.com/watch?v=1Ymn86ffrBU&list=PLBEm2Vv2nD-MFxyeYuPgPGzkpYJv-nQGI&index=5
+ * Generic Graph Data Structure Implementation in C#, 2021. TechWebDots. [YouTube video] Available at: <https://www.youtube.com/watch?v=1Ymn86ffrBU&list=PLBEm2Vv2nD-MFxyeYuPgPGzkpYJv-nQGI&index=5> [Accessed 17 June 2026].
+ * Nimble Fox, 2025. Meadow Forest Props - Low Poly Model Pack. Nimble Fox <https://nimblefox.ai/> [Accessed 17 June 2026].
+ * Jean Moreno, 2025. Cartoon FX Remaster Free. Jean Moreno <https://www.jeanmoreno.com/> [Accessed 17 June 2026].
+ * DanProps, 2024. Space Game GUI kit. DanProps <https://dribbble.com/DanProps> [Accessed 17 June 2026].
+ * Dustyroom, 2024. FREE Casual Game SFX Pack. Dustyroom <https://dustyroom.com/> [Accessed 17 June 2026].
+ * ANIMPIC STUDIO, 2024. POLY - Lite Survial Collection. animpic <https://www.animpic.studio/> [Accessed 17 June 2026].
+ * Kenney. 2020. Interface Sounds, 11 February 2020. [Online]. Available at: https://kenney.nl/assets/interface-sounds [Accessed 26 March 2025].
+ * Lonely, 2015. Andreas Ronnberg - Topic. [YouTube video] Available at: <https://youtu.be/gieF_kpkTUE?si=turv0weANDKUXiL2> [Accessed 17 June 2026].
  */

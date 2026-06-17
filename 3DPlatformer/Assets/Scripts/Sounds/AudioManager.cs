@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 namespace Platformer
 {
@@ -33,6 +34,7 @@ namespace Platformer
         [SerializeField] private Sound[] sounds;
 
         private HashMapBase<string, Sound> soundMap;
+        private string currentMusic;
 
         private void Awake()
         {
@@ -61,7 +63,7 @@ namespace Platformer
 
         private void Start()
         {
-            Play("MenuMusic"); // Play the menu music on start
+            PlayMusicForScene(SceneManager.GetActiveScene()); // Play the music on start
         }
 
         private void OnDestroy()
@@ -70,6 +72,22 @@ namespace Platformer
             {
                 Instance = null;
             }
+        }
+
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += HandleSceneLoaded;
+        }
+
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= HandleSceneLoaded;
+        }
+
+
+        private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            PlayMusicForScene(scene);
         }
 
 
@@ -93,6 +111,27 @@ namespace Platformer
             //Final audio = audio source volume * category volume * master volume
             s.source.volume = (s.volume * (categoryVolume / 100) * (SettingsManager.Instance.MasterVolume / 100));
             s.source.Play();
+        }
+
+        private void PlayMusicForScene(Scene scene)
+        {
+            string musicKey = scene.name == "MainMenu" ? "MenuMusic" : "GameplayMusic";
+
+            if (!string.IsNullOrEmpty(currentMusic))
+            {
+                Stop(currentMusic);
+            }
+            currentMusic = musicKey;
+            Play(musicKey);
+        }
+
+        public void Stop(string soundName)
+        {
+            soundMap.TryGetValue(soundName, out Sound s);
+
+            if (s == null) return;
+            
+            s.source.Stop();
         }
 
 

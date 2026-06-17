@@ -17,6 +17,16 @@ namespace Platformer
             SceneManager.LoadScene("BeginnerLevel");
         }
 
+        public void LoadAdvancedLevel()
+        {
+            SceneManager.LoadScene("AdvancedLevel");
+        }
+
+        public void LoadExpertLevel()
+        {
+            SceneManager.LoadScene("ExpertLevel");
+        }
+
         public void LoadMainMenu()
         {
             Time.timeScale = 1f;

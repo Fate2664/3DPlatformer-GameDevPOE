@@ -66274,6 +66274,7 @@ GameObject:
   - component: {fileID: 910523834}
   - component: {fileID: 910523837}
   - component: {fileID: 910523836}
+  - component: {fileID: 910523838}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -66427,6 +66428,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Platformer.GameUIManager
   pauseMenuUI: {fileID: 1341859644}
   pauseDimmer: {fileID: 293632894}
+--- !u!114 &910523838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 910523829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47e6027213b24dd6981ddd4fdbe62bee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platformer.LevelIntroSound
 --- !u!4 &910550208 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2080254620369348173, guid: 3f69ce91617ada5408f4e710ccb230eb, type: 3}
